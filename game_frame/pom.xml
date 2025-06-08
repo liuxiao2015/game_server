@@ -22,5 +22,6 @@
         <module>frame-event</module>
         <module>frame-netty</module>
         <module>frame-dubbo</module>
+        <module>frame-data</module>
     </modules>
 </project>

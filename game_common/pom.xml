@@ -22,6 +22,7 @@
         <module>common-api</module>
         <module>common-core</module>
         <module>common-model</module>
+        <module>common-entity</module>
     </modules>
 
 </project>
