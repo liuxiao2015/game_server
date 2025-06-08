@@ -6,6 +6,9 @@ import com.google.protobuf.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Protobuf utility class providing serialization, deserialization, and type conversion
  *
@@ -15,6 +18,11 @@ import org.slf4j.LoggerFactory;
 public final class ProtoUtils {
     
     private static final Logger logger = LoggerFactory.getLogger(ProtoUtils.class);
+    
+    /**
+     * Cache for parseFrom methods to avoid reflection overhead
+     */
+    private static final ConcurrentHashMap<Class<?>, Method> methodCache = new ConcurrentHashMap<>();
     
     private ProtoUtils() {
         // Utility class, no instantiation

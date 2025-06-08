@@ -1,4 +1,6 @@
 /home/runner/work/game_server/game_server/game_service/service-gateway/src/main/java/com/game/service/gateway/config/GatewayConfig.java
 /home/runner/work/game_server/game_server/game_service/service-gateway/src/main/java/com/game/service/gateway/bootstrap/GatewayBootstrap.java
 /home/runner/work/game_server/game_server/game_service/service-gateway/src/main/java/com/game/service/gateway/GatewayApplication.java
+/home/runner/work/game_server/game_server/game_service/service-gateway/src/main/java/com/game/service/gateway/simple/SimpleTestClient.java
 /home/runner/work/game_server/game_server/game_service/service-gateway/src/main/java/com/game/service/gateway/handler/ClientMessageHandler.java
+/home/runner/work/game_server/game_server/game_service/service-gateway/src/main/java/com/game/service/gateway/simple/SimpleGatewayServer.java
