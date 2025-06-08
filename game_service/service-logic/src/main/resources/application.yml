@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: game-logic
+  profiles:
+    active: dev
+  
+  # Redis configuration
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: 
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
+
+# Dubbo configuration
+dubbo:
+  application:
+    name: ${spring.application.name}
+    version: 1.0.0
+    owner: game-team
+  registry:
+    address: nacos://127.0.0.1:8848
+    username: nacos
+    password: nacos
+  protocol:
+    name: tri
+    port: 20880
+    threads: 200
+  provider:
+    timeout: 3000
+    threads: 200
+    accepts: 1000
+  consumer:
+    timeout: 3000
+    retries: 2
+    check: false
+  
+# Game configuration
+game:
+  token:
+    secret: game-secret-key-2024
+    expire: 7200  # 2 hours in seconds
+  cache:
+    user:
+      expire: 300  # 5 minutes in seconds
+      maxSize: 10000
+  logic:
+    threadPoolSize: 200
+
+# Logging configuration
+logging:
+  level:
+    com.game: DEBUG
+    org.apache.dubbo: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

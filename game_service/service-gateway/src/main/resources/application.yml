@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: game-gateway
+  profiles:
+    active: dev
+
+# Gateway specific configuration
+gateway:
+  port: 8080
+  bossThreads: 1
+  workerThreads: 4
+  maxConnections: 10000
+  connectTimeoutMs: 3000
+  heartbeatIntervalMs: 30000
+
+# Dubbo configuration (consumer only)
+dubbo:
+  application:
+    name: ${spring.application.name}
+    version: 1.0.0
+    owner: game-team
+  registry:
+    address: nacos://127.0.0.1:8848
+    username: nacos
+    password: nacos
+  consumer:
+    timeout: 3000
+    retries: 1
+    check: false
+    loadbalance: roundrobin
+
+# Logging configuration
+logging:
+  level:
+    com.game: DEBUG
+    org.apache.dubbo: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

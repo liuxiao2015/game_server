@@ -18,6 +18,12 @@
     <description>Gateway Service Implementation</description>
 
     <dependencies>
+        <!-- Dubbo Framework -->
+        <dependency>
+            <groupId>com.game</groupId>
+            <artifactId>frame-dubbo</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.game</groupId>
             <artifactId>frame-concurrent</artifactId>
@@ -30,7 +36,17 @@
         </dependency>
         <dependency>
             <groupId>com.game</groupId>
-            <artifactId>game-common</artifactId>
+            <artifactId>common-main</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.game</groupId>
+            <artifactId>common-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.game</groupId>
+            <artifactId>common-model</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

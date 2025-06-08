@@ -1,5 +1,6 @@
 package com.game.service.gateway;
 
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.slf4j.Logger;
@@ -12,7 +13,11 @@ import org.slf4j.LoggerFactory;
  * @author lx
  * @date 2024-01-01
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+    "com.game.service.gateway",
+    "com.game.frame.dubbo"
+})
+@EnableDubbo
 public class GatewayApplication {
     
     private static final Logger logger = LoggerFactory.getLogger(GatewayApplication.class);
