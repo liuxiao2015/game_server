@@ -57,6 +57,12 @@ spring:
         min-idle: 5
         max-wait: 3000ms
 
+  # MongoDB配置
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/game_logs
+      auto-index-creation: true
+
   # 缓存配置
   cache:
     type: caffeine
