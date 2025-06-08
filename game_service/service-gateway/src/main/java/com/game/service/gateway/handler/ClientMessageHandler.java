@@ -6,6 +6,7 @@ import com.game.frame.netty.protocol.MessageWrapper;
 import com.game.frame.netty.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,6 +20,12 @@ public class ClientMessageHandler implements MessageHandler<MessageWrapper> {
     
     private static final Logger logger = LoggerFactory.getLogger(ClientMessageHandler.class);
     
+    @Autowired
+    private LoginMessageHandler loginMessageHandler;
+    
+    @Autowired
+    private GameMessageHandler gameMessageHandler;
+    
     @Override
     public void handle(Session session, MessageWrapper message) {
         int messageId = message.getMessageId();
@@ -27,10 +34,10 @@ public class ClientMessageHandler implements MessageHandler<MessageWrapper> {
         
         switch (messageId) {
             case Constants.MSG_HEARTBEAT_REQUEST:
-                handleHeartbeat(session, message);
+                gameMessageHandler.handleHeartbeat(session, message);
                 break;
             case Constants.MSG_LOGIN_REQUEST:
-                handleLogin(session, message);
+                loginMessageHandler.handleLogin(session, message);
                 break;
             default:
                 handleBusinessMessage(session, message);
@@ -39,41 +46,7 @@ public class ClientMessageHandler implements MessageHandler<MessageWrapper> {
     }
     
     /**
-     * Handles heartbeat requests
-     * 
-     * @param session client session
-     * @param message heartbeat message
-     */
-    private void handleHeartbeat(Session session, MessageWrapper message) {
-        logger.debug("Received heartbeat from session: {}", session.getSessionId());
-        
-        // For now, just update session activity time
-        session.updateActiveTime();
-        
-        // TODO: Send heartbeat response
-        logger.debug("Heartbeat processed for session: {}", session.getSessionId());
-    }
-    
-    /**
-     * Handles login requests
-     * 
-     * @param session client session
-     * @param message login message
-     */
-    private void handleLogin(Session session, MessageWrapper message) {
-        logger.info("Received login request from session: {}", session.getSessionId());
-        
-        // For now, just mark as authenticated
-        // TODO: Implement proper authentication logic
-        String userId = "user_" + System.currentTimeMillis();
-        session.setUserId(userId);
-        session.setAuthenticated(true);
-        
-        logger.info("User {} logged in successfully from session: {}", userId, session.getSessionId());
-    }
-    
-    /**
-     * Handles business messages
+     * Handles business messages by routing them to appropriate game handlers
      * 
      * @param session client session
      * @param message business message
@@ -88,8 +61,22 @@ public class ClientMessageHandler implements MessageHandler<MessageWrapper> {
         logger.debug("Processing business message {} from user {} (session: {})", 
                 message.getMessageId(), session.getUserId(), session.getSessionId());
         
-        // TODO: Forward to appropriate business service
-        logger.debug("Business message processed");
+        // Route to appropriate game handler based on message ID
+        // Add more message types as needed
+        switch (message.getMessageId()) {
+            case 1001: // Enter game
+                gameMessageHandler.handleEnterGame(session, message);
+                break;
+            case 1002: // Exit game
+                gameMessageHandler.handleExitGame(session, message);
+                break;
+            case 1003: // Sync game data
+                gameMessageHandler.handleGameDataSync(session, message);
+                break;
+            default:
+                logger.warn("Unknown business message type: {}", message.getMessageId());
+                break;
+        }
     }
     
     @Override

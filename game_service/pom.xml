@@ -19,5 +19,6 @@
 
     <modules>
         <module>service-gateway</module>
+        <module>service-logic</module>
     </modules>
 </project>
