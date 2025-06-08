@@ -50,8 +50,15 @@ public final class ProtoUtils {
         }
         
         try {
-            // Use reflection to call parseFrom method
-            return (T) clazz.getMethod("parseFrom", byte[].class).invoke(null, (Object) data);
+            // Check cache for the parseFrom method
+            java.lang.reflect.Method parseFromMethod = methodCache.computeIfAbsent(clazz, key -> {
+                try {
+                    return key.getMethod("parseFrom", byte[].class);
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException("Failed to find parseFrom method for class: " + key.getName(), e);
+                }
+            });
+            return (T) parseFromMethod.invoke(null, (Object) data);
         } catch (Exception e) {
             throw new InvalidProtocolBufferException("Failed to deserialize: " + e.getMessage());
         }
