@@ -30,7 +30,17 @@
         </dependency>
         <dependency>
             <groupId>com.game</groupId>
-            <artifactId>game-common</artifactId>
+            <artifactId>common-main</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.game</groupId>
+            <artifactId>common-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.game</groupId>
+            <artifactId>common-model</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

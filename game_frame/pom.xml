@@ -21,5 +21,6 @@
         <module>frame-concurrent</module>
         <module>frame-event</module>
         <module>frame-netty</module>
+        <module>frame-dubbo</module>
     </modules>
 </project>
