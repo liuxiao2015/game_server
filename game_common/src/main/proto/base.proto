@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package com.game.proto;
+
+option java_package = "com.game.common.proto";
+option java_outer_classname = "BaseProto";
+
+// Base request message
+message BaseRequest {
+    int64 sequence_id = 1;        // Request sequence number
+    int32 message_id = 2;         // Message ID
+    int64 timestamp = 3;          // Timestamp
+    string session_id = 4;        // Session ID
+    bytes payload = 5;            // Business data
+    map<string, string> headers = 6; // Extension headers
+}
+
+// Base response message
+message BaseResponse {
+    int64 sequence_id = 1;        // Corresponding request sequence number
+    int32 code = 2;               // Response code
+    string message = 3;           // Response message
+    bytes payload = 4;            // Business data
+    int64 timestamp = 5;          // Timestamp
+}
+
+// Heartbeat request
+message HeartbeatRequest {
+    int64 timestamp = 1;          // Client timestamp
+}
+
+// Heartbeat response
+message HeartbeatResponse {
+    int64 timestamp = 1;          // Server timestamp
+    int64 client_timestamp = 2;   // Echo client timestamp
+}
+
+// Error codes
+enum ErrorCode {
+    SUCCESS = 0;
+    UNKNOWN_ERROR = 1;
+    INVALID_REQUEST = 2;
+    AUTHENTICATION_FAILED = 3;
+    PERMISSION_DENIED = 4;
+    RESOURCE_NOT_FOUND = 5;
+    RATE_LIMIT_EXCEEDED = 6;
+    INTERNAL_SERVER_ERROR = 7;
+}
