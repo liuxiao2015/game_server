@@ -1,0 +1,5 @@
+com/game/service/gateway/config/GatewayConfig.class
+com/game/service/gateway/handler/ClientMessageHandler.class
+com/game/service/gateway/GatewayApplication.class
+com/game/service/gateway/bootstrap/GatewayBootstrap.class
+com/game/service/gateway/bootstrap/GatewayBootstrap$CatchAllHandler.class
