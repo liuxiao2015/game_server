@@ -131,7 +131,7 @@ public class ConcurrentUtils {
         long startTime = System.currentTimeMillis();
         
         try {
-            CompletableFuture<T> future = CompletableFuture.supplyAsync(supplier);
+            CompletableFuture<T> future = CompletableFuture.supplyAsync(supplier, executor);
             T result = future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
             long executionTime = System.currentTimeMillis() - startTime;
             return TaskResult.success(result, executionTime);
