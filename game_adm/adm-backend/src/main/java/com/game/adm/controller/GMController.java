@@ -73,6 +73,15 @@ public class GMController {
     @PostMapping("/script/execute")
     @Operation(summary = "执行脚本", description = "执行GM脚本命令")
     public void executeScript(@RequestParam String script) {
+        if (!isValidScript(script)) {
+            throw new IllegalArgumentException("Invalid script format.");
+        }
         gmService.executeScript(script);
+    }
+    
+    private boolean isValidScript(String script) {
+        // Example validation: only allow alphanumeric characters and basic operators
+        String scriptPattern = "^[a-zA-Z0-9_\\-+*/\\s]+$";
+        return script != null && script.matches(scriptPattern);
     }
 }
