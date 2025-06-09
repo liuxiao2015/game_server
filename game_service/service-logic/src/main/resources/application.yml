@@ -52,6 +52,15 @@ game:
       maxSize: 10000
   logic:
     threadPoolSize: 200
+  # Stage 4 Game Module Configuration
+  frame:
+    rate: 30  # 帧率
+  battle:
+    timeout: 300  # 战斗超时(秒)
+  bag:
+    default-size: 100  # 默认背包大小
+  task:
+    max-accept: 20  # 最大接取任务数
 
 # Logging configuration
 logging:

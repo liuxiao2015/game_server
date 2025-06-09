@@ -1,0 +1,25 @@
+syntax = "proto3";
+package com.game.protocol;
+option java_package = "com.game.common.protocol.base";
+
+// 基础消息头
+message MessageHeader {
+  int32 cmd = 1;          // 命令ID
+  int32 seq = 2;          // 序列号
+  int64 timestamp = 3;    // 时间戳
+  string trace_id = 4;    // 追踪ID
+}
+
+// 基础请求
+message BaseRequest {
+  MessageHeader header = 1;
+  bytes body = 2;         // 业务数据
+}
+
+// 基础响应
+message BaseResponse {
+  MessageHeader header = 1;
+  int32 code = 2;         // 响应码
+  string msg = 3;         // 响应消息
+  bytes body = 4;         // 业务数据
+}

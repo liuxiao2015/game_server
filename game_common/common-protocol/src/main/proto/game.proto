@@ -1,0 +1,107 @@
+syntax = "proto3";
+package com.game.protocol;
+option java_package = "com.game.common.protocol.game";
+
+import "base.proto";
+
+// 登录请求
+message C2S_Login {
+  string username = 1;
+  string password = 2;
+  string token = 3;
+}
+
+// 登录响应
+message S2C_Login {
+  bool success = 1;
+  string session_id = 2;
+  int64 player_id = 3;
+  string error_msg = 4;
+}
+
+// 背包信息请求
+message C2S_BagInfo {
+  // 空请求
+}
+
+// 物品信息
+message ItemInfo {
+  int64 item_uid = 1;     // 物品唯一ID
+  int32 item_id = 2;      // 物品配置ID
+  int32 count = 3;        // 数量
+  bool is_bound = 4;      // 是否绑定
+  int64 expire_time = 5;  // 过期时间
+}
+
+// 背包信息响应
+message S2C_BagInfo {
+  repeated ItemInfo items = 1;
+  int32 capacity = 2;     // 背包容量
+}
+
+// 使用物品请求
+message C2S_UseItem {
+  int64 item_uid = 1;
+  int32 count = 2;
+}
+
+// 使用物品响应
+message S2C_UseItem {
+  bool success = 1;
+  string error_msg = 2;
+}
+
+// 任务列表请求
+message C2S_TaskList {
+  // 空请求
+}
+
+// 任务信息
+message TaskInfo {
+  int64 task_id = 1;      // 任务ID
+  int32 config_id = 2;    // 任务配置ID
+  int32 state = 3;        // 任务状态
+  map<string, int32> progress = 4; // 任务进度
+  int64 accept_time = 5;  // 接取时间
+}
+
+// 任务列表响应
+message S2C_TaskList {
+  repeated TaskInfo tasks = 1;
+}
+
+// 接取任务请求
+message C2S_AcceptTask {
+  int32 task_config_id = 1;
+}
+
+// 接取任务响应
+message S2C_AcceptTask {
+  bool success = 1;
+  string error_msg = 2;
+  TaskInfo task = 3;
+}
+
+// 完成任务请求
+message C2S_CompleteTask {
+  int64 task_id = 1;
+}
+
+// 完成任务响应
+message S2C_CompleteTask {
+  bool success = 1;
+  string error_msg = 2;
+  repeated ItemInfo rewards = 3;
+}
+
+// 战斗开始请求
+message C2S_BattleStart {
+  int32 monster_id = 1;
+}
+
+// 战斗结果响应
+message S2C_BattleResult {
+  bool victory = 1;
+  int32 exp_gain = 2;
+  repeated ItemInfo drops = 3;
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "id": 2001,
+    "name": "击杀史莱姆",
+    "description": "前往新手村附近击杀10只史莱姆",
+    "type": 1,
+    "requirements": {
+      "kill_monster_1001": 10
+    },
+    "rewards": [
+      {
+        "itemId": 1002,
+        "count": 5
+      }
+    ],
+    "expReward": 100
+  },
+  {
+    "id": 2002,
+    "name": "收集草药",
+    "description": "收集5个小草药",
+    "type": 2,
+    "requirements": {
+      "collect_item_1004": 5
+    },
+    "rewards": [
+      {
+        "itemId": 1003,
+        "count": 3
+      }
+    ],
+    "expReward": 50
+  },
+  {
+    "id": 2003,
+    "name": "达到2级",
+    "description": "将角色等级提升到2级",
+    "type": 3,
+    "requirements": {
+      "reach_level": 2
+    },
+    "rewards": [
+      {
+        "itemId": 1001,
+        "count": 1
+      }
+    ],
+    "expReward": 200
+  }
+]
