@@ -102,7 +102,7 @@ public enum SecurityEventType {
                this == LOG_TAMPERING;
     }
     
-    public boolean requiresImediateAction() {
+    public boolean requiresImmediateAction() {
         return isCritical() ||
                this == DDOS_ATTACK ||
                this == BRUTE_FORCE_ATTACK ||
