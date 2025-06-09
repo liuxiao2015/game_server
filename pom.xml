@@ -57,6 +57,7 @@
         <module>game_service</module>
         <module>game_launcher</module>
         <module>game_adm</module>
+        <module>game_test</module>
     </modules>
 
     <dependencyManagement>

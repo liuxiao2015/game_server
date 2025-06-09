@@ -18,7 +18,6 @@
 
     <modules>
         <module>adm-backend</module>
-        <module>adm-frontend</module>
     </modules>
 
     <properties>
