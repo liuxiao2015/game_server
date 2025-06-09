@@ -27,7 +27,7 @@ public interface ChatMessageRepository extends ElasticsearchRepository<ChatMessa
     /**
      * Find messages by sender ID
      */
-    List<ChatMessage> findBySenderIdAndDeletedFalseOrderByTimestampDesc(Long senderId, Pageable pageable);
+    Page<ChatMessage> findBySenderIdAndDeletedFalseOrderByTimestampDesc(Long senderId, Pageable pageable);
 
     /**
      * Find messages by channel and time range
