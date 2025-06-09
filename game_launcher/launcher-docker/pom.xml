@@ -7,21 +7,19 @@
 
     <parent>
         <groupId>com.game</groupId>
-        <artifactId>game-server</artifactId>
+        <artifactId>game-launcher</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>game-service</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>launcher-docker</artifactId>
+    <name>Launcher Docker</name>
+    <description>Docker containerization support for game services</description>
 
-    <name>Game Service</name>
-    <description>Game Service Layer</description>
-
-    <modules>
-        <module>service-gateway</module>
-        <module>service-logic</module>
-        <module>service-chat</module>
-        <module>service-payment</module>
-        <module>service-match</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.game</groupId>
+            <artifactId>launcher-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

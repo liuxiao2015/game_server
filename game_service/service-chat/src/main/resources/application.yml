@@ -1,0 +1,142 @@
+spring:
+  application:
+    name: service-chat
+  profiles:
+    active: development
+  
+  # Data source configuration
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 3000
+    lettuce:
+      pool:
+        max-active: 20
+        max-wait: -1
+        max-idle: 10
+        min-idle: 5
+  
+  # ElasticSearch configuration
+  elasticsearch:
+    uris: http://localhost:9200
+    connection-timeout: 5s
+    socket-timeout: 10s
+  
+  # RocketMQ configuration
+  rocketmq:
+    name-server: localhost:9876
+    producer:
+      group: chat-producer-group
+      send-message-timeout: 3000
+      retry-times-when-send-failed: 2
+    consumer:
+      group: chat-consumer-group
+
+# Dubbo configuration
+dubbo:
+  application:
+    name: service-chat
+    version: 1.0.0
+  registry:
+    address: nacos://localhost:8848
+    namespace: game-server
+    group: DEFAULT_GROUP
+  protocol:
+    name: tri
+    port: 20883
+    serialization: fastjson2
+  consumer:
+    timeout: 3000
+    retries: 2
+    loadbalance: roundrobin
+    check: false
+  provider:
+    timeout: 3000
+    threads: 200
+
+# Chat service specific configuration
+chat:
+  websocket:
+    endpoint: "/chat"
+    heartbeat-interval: 30000
+    max-session-timeout: 300000
+  
+  rocketmq:
+    chat-topic: "CHAT_MESSAGES"
+    offline-topic: "OFFLINE_MESSAGES"
+    broadcast-topic: "BROADCAST_MESSAGES"
+  
+  elasticsearch:
+    message-index: "chat_messages"
+    max-search-results: 100
+    retention-days: 90
+  
+  channel:
+    max-members-per-channel: 1000
+    max-channels-per-user: 50
+    enable-sensitive-word-filter: true
+
+# Server configuration
+server:
+  port: 8082
+  servlet:
+    context-path: /
+
+# Management and monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+
+# Logging configuration
+logging:
+  level:
+    com.game.service.chat: DEBUG
+    com.game: INFO
+    org.springframework: WARN
+    org.apache.dubbo: WARN
+    org.elasticsearch: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId}] %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId}] %logger{36} - %msg%n"
+
+---
+# Docker profile
+spring:
+  profiles: docker
+  redis:
+    host: redis
+  elasticsearch:
+    uris: http://elasticsearch:9200
+  rocketmq:
+    name-server: rocketmq-namesrv:9876
+    
+dubbo:
+  registry:
+    address: nacos://nacos:8848
+
+---
+# Kubernetes profile  
+spring:
+  profiles: kubernetes
+  redis:
+    host: redis-service
+  elasticsearch:
+    uris: http://elasticsearch-service:9200
+  rocketmq:
+    name-server: rocketmq-service:9876
+    
+dubbo:
+  registry:
+    address: nacos://nacos-service:8848
