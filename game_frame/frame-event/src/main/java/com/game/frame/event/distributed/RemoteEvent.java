@@ -3,8 +3,22 @@ package com.game.frame.event.distributed;
 import com.game.frame.event.Event;
 
 /**
- * Remote event base class for distributed event processing
- * Contains event metadata for cross-service communication
+ * Remote event base /**
+ * for
+ * 
+ * 功能说明：
+ * - 提供核心业务功能实现
+ * - 支持模块化设计和扩展
+ * - 集成框架的标准组件和服务
+ *
+ * @author lx
+/**
+ * RemoteEvent
+ * 
+ * 功能说明：
+ * - 提供核心业务功能实现
+ * - 支持模块化设计和扩展
+ * - 集成框架的标准组件和服务
  *
  * @author lx
  * @date 2024-01-01

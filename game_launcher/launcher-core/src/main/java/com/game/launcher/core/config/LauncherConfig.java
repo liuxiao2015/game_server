@@ -19,6 +19,17 @@ import java.util.Map;
  * @author lx
  * @date 2025/01/08
  */
+/**
+ * Launcher配置类
+ * 
+ * 功能说明：
+ * - 配置系统或模块的参数和属性
+ * - 支持配置的自动加载和验证
+ * - 集成Spring Boot配置管理机制
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class LauncherConfig {
     
     private static final Logger logger = LoggerFactory.getLogger(LauncherConfig.class);

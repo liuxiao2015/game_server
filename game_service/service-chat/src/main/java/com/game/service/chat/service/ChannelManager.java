@@ -16,6 +16,17 @@ import java.util.concurrent.atomic.AtomicLong;
  * @date 2025/01/08
  */
 @Component
+/**
+ * Channel管理器
+ * 
+ * 功能说明：
+ * - 管理特定资源或组件的生命周期
+ * - 提供统一的操作接口和控制逻辑
+ * - 协调多个组件的协作关系
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class ChannelManager {
     
     private static final Logger logger = LoggerFactory.getLogger(ChannelManager.class);

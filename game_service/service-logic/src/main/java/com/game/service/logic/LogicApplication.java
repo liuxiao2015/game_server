@@ -18,6 +18,17 @@ import org.slf4j.LoggerFactory;
     "com.game.frame.dubbo"
 })
 @EnableDubbo
+/**
+ * Logic应用启动类
+ * 
+ * 功能说明：
+ * - 应用程序的主入口和启动配置
+ * - 初始化Spring应用上下文
+ * - 配置组件扫描和自动装配
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class LogicApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(LogicApplication.class);

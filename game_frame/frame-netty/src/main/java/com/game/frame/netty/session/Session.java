@@ -12,6 +12,17 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author lx
  * @date 2024-01-01
  */
+/**
+ * Session
+ * 
+ * 功能说明：
+ * - 提供核心业务功能实现
+ * - 支持模块化设计和扩展
+ * - 集成框架的标准组件和服务
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class Session {
     
     private static final AtomicLong SESSION_ID_GENERATOR = new AtomicLong(1);

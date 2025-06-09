@@ -17,6 +17,17 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableDubbo
 @EnableAsync
 @EnableScheduling
+/**
+ * Match应用启动类
+ * 
+ * 功能说明：
+ * - 应用程序的主入口和启动配置
+ * - 初始化Spring应用上下文
+ * - 配置组件扫描和自动装配
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class MatchApplication {
     public static void main(String[] args) {
         SpringApplication.run(MatchApplication.class, args);

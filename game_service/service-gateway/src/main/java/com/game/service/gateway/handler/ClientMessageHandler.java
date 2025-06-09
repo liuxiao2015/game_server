@@ -16,6 +16,17 @@ import org.springframework.stereotype.Component;
  * @date 2024-01-01
  */
 @Component
+/**
+ * ClientMessage处理器
+ * 
+ * 功能说明：
+ * - 处理特定类型的请求或事件
+ * - 实现消息路由和业务逻辑
+ * - 提供异步处理和错误处理
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class ClientMessageHandler implements MessageHandler<MessageWrapper> {
     
     private static final Logger logger = LoggerFactory.getLogger(ClientMessageHandler.class);
