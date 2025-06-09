@@ -1,0 +1,76 @@
+security:
+  jwt:
+    secret: ${JWT_SECRET:defaultSecretKey32CharactersLongForSecurity}
+    expiration: 7200  # 2 hours
+    refresh-window: 1800  # 30 minutes
+  
+  crypto:
+    algorithm: AES/GCM/NoPadding
+    key-size: 256
+    
+  rate-limit:
+    default-qps: 100
+    burst-capacity: 200
+    
+  anti-replay:
+    window-size: 300  # 5 minutes
+    
+  audit:
+    enabled: true
+    async: true
+    batch-size: 100
+
+# Spring Security Configuration
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          # OAuth2 providers can be configured here
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:}
+            client-secret: ${GOOGLE_CLIENT_SECRET:}
+            scope: openid,profile,email
+          github:
+            client-id: ${GITHUB_CLIENT_ID:}
+            client-secret: ${GITHUB_CLIENT_SECRET:}
+            scope: user:email,read:user
+
+# Rate Limiting Configuration
+resilience4j:
+  ratelimiter:
+    instances:
+      default:
+        limit-for-period: 100
+        limit-refresh-period: 60s
+        timeout-duration: 1s
+      login:
+        limit-for-period: 5
+        limit-refresh-period: 60s
+        timeout-duration: 1s
+      api:
+        limit-for-period: 1000
+        limit-refresh-period: 60s
+        timeout-duration: 500ms
+
+# Logging Configuration for Security
+logging:
+  level:
+    com.game.frame.security: DEBUG
+    AUDIT: INFO
+    org.springframework.security: DEBUG
+    org.springframework.web.filter: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/security.log
+    max-size: 100MB
+    max-history: 30
+
+# Jasypt Configuration for Property Encryption
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD:mySecretKey}
+    algorithm: PBEWITHHMACSHA512ANDAES_256
+    iv-generator-classname: org.jasypt.iv.RandomIvGenerator
