@@ -54,6 +54,11 @@
             <artifactId>common-protocol</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.game</groupId>
+            <artifactId>frame-timer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- Spring Boot Starter -->
         <dependency>

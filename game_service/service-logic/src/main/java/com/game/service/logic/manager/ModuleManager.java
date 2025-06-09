@@ -1,5 +1,8 @@
 package com.game.service.logic.manager;
 
+import com.game.service.logic.handler.BagHandler;
+import com.game.service.logic.handler.BattleHandler;
+import com.game.service.logic.handler.TaskHandler;
 import com.game.service.logic.module.bag.BagModule;
 import com.game.service.logic.module.bag.BagService;
 import com.game.service.logic.module.battle.BattleModule;
@@ -26,6 +29,11 @@ public class ModuleManager {
     private TaskModule taskModule;
     private BattleModule battleModule;
     
+    // 消息处理器
+    private BagHandler bagHandler;
+    private TaskHandler taskHandler;
+    private BattleHandler battleHandler;
+    
     /**
      * 初始化所有模块
      */
@@ -41,6 +49,11 @@ public class ModuleManager {
         
         // 初始化战斗模块
         battleModule = new BattleModule();
+        
+        // 初始化处理器
+        bagHandler = new BagHandler(this);
+        taskHandler = new TaskHandler(this);
+        battleHandler = new BattleHandler(this);
         
         logger.info("All game modules initialized successfully");
     }
@@ -83,5 +96,18 @@ public class ModuleManager {
     
     public BattleModule getBattleModule() {
         return battleModule;
+    }
+    
+    // Getters for handlers
+    public BagHandler getBagHandler() {
+        return bagHandler;
+    }
+    
+    public TaskHandler getTaskHandler() {
+        return taskHandler;
+    }
+    
+    public BattleHandler getBattleHandler() {
+        return battleHandler;
     }
 }
