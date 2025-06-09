@@ -20,5 +20,8 @@
     <modules>
         <module>service-gateway</module>
         <module>service-logic</module>
+        <module>service-chat</module>
+        <module>service-payment</module>
+        <module>service-match</module>
     </modules>
 </project>

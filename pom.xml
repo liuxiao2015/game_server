@@ -40,6 +40,15 @@
         <disruptor.version>4.0.0</disruptor.version>
         <groovy.version>4.0.17</groovy.version>
         <commons-pool2.version>2.12.0</commons-pool2.version>
+        
+        <!-- Phase 6 Dependencies -->
+        <rocketmq.version>5.1.4</rocketmq.version>
+        <elasticsearch.version>8.11.0</elasticsearch.version>
+        <websocket.version>3.2.0</websocket.version>
+        <alipay.version>4.38.157.ALL</alipay.version>
+        <wechatpay.version>0.4.9</wechatpay.version>
+        <kubernetes.version>19.0.0</kubernetes.version>
+        <opentelemetry.version>1.33.0</opentelemetry.version>
     </properties>
 
     <modules>
@@ -131,6 +140,50 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-pool2</artifactId>
                 <version>${commons-pool2.version}</version>
+            </dependency>
+            
+            <!-- Phase 6 Dependencies -->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>${rocketmq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-websocket</artifactId>
+                <version>${websocket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sdk</groupId>
+                <artifactId>alipay-sdk-java</artifactId>
+                <version>${alipay.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.wechatpay-apiv3</groupId>
+                <artifactId>wechatpay-java</artifactId>
+                <version>${wechatpay.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.kubernetes</groupId>
+                <artifactId>client-java</artifactId>
+                <version>${kubernetes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.opentelemetry</groupId>
+                <artifactId>opentelemetry-bom</artifactId>
+                <version>${opentelemetry.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
