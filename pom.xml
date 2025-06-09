@@ -55,6 +55,7 @@
         <module>game_frame</module>
         <module>game_common</module>
         <module>game_service</module>
+        <module>game_launcher</module>
     </modules>
 
     <dependencyManagement>
