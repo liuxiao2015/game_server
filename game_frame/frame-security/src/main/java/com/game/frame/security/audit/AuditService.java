@@ -262,6 +262,38 @@ public class AuditService {
     }
 
     /**
+     * 记录安全事件到审计日志
+     */
+    @Async
+    public void recordSecurityEvent(SecurityEvent event) {
+        try {
+            AuditLog auditLog = new AuditLog(
+                event.getUserId(),
+                event.getEventType().name(),
+                "SECURITY_EVENT"
+            );
+            
+            // 设置其他属性
+            auditLog.setId(event.getEventId());
+            auditLog.setUsername(event.getUsername());
+            auditLog.setIp(event.getSourceIp());
+            auditLog.setUserAgent(event.getUserAgent());
+            auditLog.setTimestamp(event.getTimestamp());
+            auditLog.setDetails(event.getDetails());
+            auditLog.setStatus("SUCCESS");
+            auditLog.setErrorMessage(event.getMessage());
+            
+            // 异步记录
+            logAsync(auditLog);
+            
+            logger.debug("Security event recorded to audit log: {}", event.getEventType());
+            
+        } catch (Exception e) {
+            logger.error("Failed to record security event to audit log", e);
+        }
+    }
+
+    /**
      * 查询审计日志
      */
     public List<AuditLog> queryAuditLogs(String userId, String action, LocalDateTime startTime, LocalDateTime endTime) {
