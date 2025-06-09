@@ -117,6 +117,12 @@
             <artifactId>groovy</artifactId>
         </dependency>
 
+        <!-- OAuth2 Client Support -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
         <!-- Common modules - Remove for now to avoid circular dependency -->
         <!--
         <dependency>

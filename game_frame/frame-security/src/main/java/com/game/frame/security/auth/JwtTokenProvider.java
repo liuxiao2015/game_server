@@ -161,6 +161,31 @@ public class JwtTokenProvider {
         return claims.getExpiration().before(new Date());
     }
 
+    /**
+     * 获取Token过期时间
+     */
+    public long getTokenExpiration() {
+        return securityProperties.getJwt().getExpiration();
+    }
+
+    /**
+     * 获取Token剩余时间（秒）
+     */
+    public long getTokenRemainingTime(String token) {
+        try {
+            Claims claims = parseToken(token);
+            if (claims == null) {
+                return 0;
+            }
+            Date expiration = claims.getExpiration();
+            long remaining = (expiration.getTime() - System.currentTimeMillis()) / 1000;
+            return Math.max(remaining, 0);
+        } catch (Exception e) {
+            logger.error("Failed to get token remaining time", e);
+            return 0;
+        }
+    }
+
     private SecretKey getSignKey() {
         return Keys.hmacShaKeyFor(securityProperties.getJwt().getSecret().getBytes());
     }

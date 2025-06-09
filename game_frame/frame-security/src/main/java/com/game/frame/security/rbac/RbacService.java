@@ -112,6 +112,31 @@ public class RbacService {
      * 获取用户角色
      */
     @SuppressWarnings("unchecked")
+    /**
+     * 获取用户的所有权限
+     */
+    public Set<String> getUserPermissions(Long userId) {
+        try {
+            Set<String> userRoles = getUserRoles(userId);
+            Set<String> permissions = new HashSet<>();
+            
+            for (String roleCode : userRoles) {
+                Role role = getRole(roleCode);
+                if (role != null && role.getPermissions() != null) {
+                    // Extract permission codes from Permission objects
+                    for (Permission permission : role.getPermissions()) {
+                        permissions.add(permission.getCode());
+                    }
+                }
+            }
+            
+            return permissions;
+        } catch (Exception e) {
+            logger.error("Failed to get permissions for user {}", userId, e);
+            return new HashSet<>();
+        }
+    }
+
     public Set<String> getUserRoles(Long userId) {
         try {
             String key = USER_ROLE_PREFIX + userId;
