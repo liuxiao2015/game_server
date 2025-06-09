@@ -17,31 +17,62 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Netty server startup and management with Epoll/NIO auto-selection,
- * Boss/Worker thread group configuration, Channel option optimization, and graceful shutdown
- *
+ * Netty服务器启动和管理类
+ * 
+ * 功能说明：
+ * - 自动选择Epoll/NIO传输模式以获得最佳性能
+ * - 配置Boss/Worker线程组，优化网络I/O处理
+ * - 提供Channel选项优化和连接管理
+ * - 支持优雅启动和关闭机制
+ * 
+ * 设计思路：
+ * - 根据操作系统自动选择最优的网络传输实现
+ * - 分离连接接受(Boss)和I/O处理(Worker)线程池
+ * - 集成会话管理和消息分发机制
+ * - 提供完整的生命周期管理
+ * 
+ * 性能优化：
+ * - Linux系统下优先使用Epoll，提升并发性能
+ * - 合理配置线程池大小，避免资源浪费
+ * - 优化TCP选项，提升网络传输效率
+ * - 实现连接数限制和流量控制
+ * 
+ * 使用场景：
+ * - 游戏网关服务器，处理客户端连接
+ * - 内部服务通信，提供RPC网络支持
+ * - 实时通信服务，如聊天、匹配等
+ * - 高并发长连接服务
+ * 
  * @author lx
  * @date 2024-01-01
  */
 public class NettyServer {
     
+    // 日志记录器，用于记录服务器启动、运行和异常信息
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
     
+    // 服务器配置信息，包含端口、线程数、超时等参数
     private final NettyServerConfig config;
+    // 会话管理器，负责客户端连接的生命周期管理
     private final SessionManager sessionManager;
+    // 消息分发器，处理入站消息的路由和分发
     private final MessageDispatcher messageDispatcher;
+    // 服务器启动状态标志，使用原子操作确保线程安全
     private final AtomicBoolean started = new AtomicBoolean(false);
     
+    // Boss线程组，专门处理新连接的接受
     private EventLoopGroup bossGroup;
+    // Worker线程组，处理已建立连接的I/O操作
     private EventLoopGroup workerGroup;
+    // 服务器Channel，代表监听端口的服务器套接字
     private Channel serverChannel;
     
     /**
-     * Creates a new NettyServer
+     * 创建Netty服务器实例
      * 
-     * @param config server configuration
-     * @param sessionManager session manager
-     * @param messageDispatcher message dispatcher
+     * @param config 服务器配置对象，包含端口、线程数等参数
+     * @param sessionManager 会话管理器，负责连接生命周期管理
+     * @param messageDispatcher 消息分发器，处理业务消息路由
      */
     public NettyServer(NettyServerConfig config, SessionManager sessionManager, MessageDispatcher messageDispatcher) {
         this.config = config;

@@ -10,38 +10,110 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 统计服务
+ * 游戏数据统计服务类
+ * 
+ * 功能说明：
+ * - 提供游戏运营所需的各种数据统计功能
+ * - 包含实时在线、活跃用户、收入分析等核心指标
+ * - 支持留存分析、付费转化等高级运营数据
+ * - 为管理后台和数据看板提供数据支持
+ * 
+ * 设计思路：
+ * - 采用服务层模式，封装复杂的统计计算逻辑
+ * - 支持多种时间维度的数据查询（实时、日、月）
+ * - 使用Builder模式构建统计结果对象
+ * - 预留与游戏服务集成的接口扩展点
+ * 
+ * 统计指标：
+ * - 在线数据：实时在线、峰值在线、在线时长分布
+ * - 活跃数据：DAU、MAU、WAU、新增用户、流失用户
+ * - 收入数据：总收入、ARPU、ARPPU、付费率
+ * - 留存数据：次日留存、7日留存、30日留存
+ * - 行为数据：功能使用率、关卡通过率、物品消费
+ * 
+ * 使用场景：
+ * - 管理后台的数据展示
+ * - 运营决策的数据支持
+ * - 业务健康度监控
+ * - 用户行为分析
+ * 
  * @author lx
  * @date 2025/06/08
  */
 @Service
 public class StatisticsService {
     
+    // 日志记录器，用于记录统计操作和异常信息
     private static final Logger logger = LoggerFactory.getLogger(StatisticsService.class);
     
     /**
-     * 实时在线统计
+     * 获取实时在线用户统计数据
+     * 
+     * 统计内容：
+     * - 当前在线用户数：实时统计当前连接的用户数量
+     * - 峰值在线用户数：今日或指定时间段内的最高在线数
+     * - 在线用户分布：按服务器、地区、等级等维度分布
+     * - 时间戳：数据更新时间，用于判断数据新鲜度
+     * 
+     * @return 实时在线统计对象，包含当前在线数和峰值等信息
+     * 
+     * 实现要点：
+     * - 数据来源：与游戏网关服务器实时同步
+     * - 更新频率：建议每分钟更新一次
+     * - 缓存策略：使用短期缓存减少计算开销
+     * 
+     * TODO: 实现与游戏服务的集成，获取实时在线数据
      */
     public OnlineStatistics getRealtimeOnline() {
-        logger.debug("Getting real-time online statistics");
+        logger.debug("获取实时在线统计数据");
         // TODO: 实现与游戏服务的集成，获取实时在线数据
+        // 1. 从游戏网关获取当前连接数
+        // 2. 从Redis获取峰值在线数
+        // 3. 计算在线用户分布数据
         return OnlineStatistics.builder()
-                .currentOnline(1234)
-                .peakOnline(2456)
-                .timestamp(LocalDateTime.now())
+                .currentOnline(1234)  // 当前在线用户数
+                .peakOnline(2456)     // 今日峰值在线数
+                .timestamp(LocalDateTime.now())  // 数据时间戳
                 .build();
     }
     
     /**
-     * DAU/MAU统计
+     * 获取活跃用户统计数据(DAU/MAU/WAU)
+     * 
+     * 统计指标说明：
+     * - DAU (Daily Active Users): 日活跃用户数，当日登录过的唯一用户数
+     * - WAU (Weekly Active Users): 周活跃用户数，近7天登录过的唯一用户数
+     * - MAU (Monthly Active Users): 月活跃用户数，近30天登录过的唯一用户数
+     * - 新增用户：指定时间范围内首次注册的用户数
+     * - 回流用户：重新激活的老用户数
+     * 
+     * @param range 统计时间范围，支持日、周、月等不同维度
+     * @return 活跃用户统计对象，包含各维度的活跃数据
+     * 
+     * 计算逻辑：
+     * 1. 从用户登录日志表查询指定时间范围的登录记录
+     * 2. 去重计算唯一用户数（基于用户ID）
+     * 3. 结合用户注册时间计算新增和回流用户
+     * 4. 生成不同时间维度的活跃度对比数据
+     * 
+     * 性能优化：
+     * - 使用预计算结果缓存，避免重复查询大数据量
+     * - 分时段计算，支持增量更新
+     * - 建立合适的数据库索引提升查询效率
+     * 
+     * TODO: 实现完整的DAU/MAU统计逻辑和数据库查询优化
      */
     public ActiveUserStatistics getActiveUsers(DateRange range) {
-        logger.debug("Getting active user statistics for range: {}", range);
+        logger.debug("获取活跃用户统计数据，时间范围: {}", range);
         // TODO: 实现DAU/MAU统计逻辑
+        // 1. 查询用户登录日志表，按时间范围筛选
+        // 2. 使用SQL去重统计唯一用户数
+        // 3. 计算环比、同比增长率
+        // 4. 生成趋势图数据点
         return ActiveUserStatistics.builder()
-                .dau(5678)
-                .mau(89012)
-                .range(range)
+                .dau(5678)    // 日活跃用户数
+                .mau(89012)   // 月活跃用户数
+                .range(range) // 统计时间范围
                 .build();
     }
     
