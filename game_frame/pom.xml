@@ -23,5 +23,6 @@
         <module>frame-netty</module>
         <module>frame-dubbo</module>
         <module>frame-data</module>
+        <module>frame-timer</module>
     </modules>
 </project>

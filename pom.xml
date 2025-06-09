@@ -33,6 +33,13 @@
         <junit.version>5.10.1</junit.version>
         <mockito.version>5.7.0</mockito.version>
         <p3c-pmd.version>2.1.1</p3c-pmd.version>
+        
+        <!-- Stage 4 Dependencies -->
+        <jackson.version>2.16.0</jackson.version>
+        <quartz.version>2.3.2</quartz.version>
+        <disruptor.version>4.0.0</disruptor.version>
+        <groovy.version>4.0.17</groovy.version>
+        <commons-pool2.version>2.12.0</commons-pool2.version>
     </properties>
 
     <modules>
@@ -97,6 +104,33 @@
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito.version}</version>
                 <scope>test</scope>
+            </dependency>
+            
+            <!-- Stage 4 Dependencies -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${quartz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${disruptor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-pool2.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
