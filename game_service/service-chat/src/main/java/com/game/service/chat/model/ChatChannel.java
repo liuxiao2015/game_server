@@ -104,7 +104,7 @@ public class ChatChannel {
     }
 
     public void setMembers(Set<Long> members) {
-        this.members = members != null ? members : new CopyOnWriteArraySet<>();
+        this.members = members != null ? new CopyOnWriteArraySet<>(members) : new CopyOnWriteArraySet<>();
     }
 
     public Map<String, Object> getProperties() {
