@@ -20,8 +20,35 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * User service implementation
- * Provides user login, information retrieval and update operations
+ * 用户服务实现类
+ * 
+ * 功能说明：
+ * - 实现用户登录认证的完整业务逻辑
+ * - 提供用户信息查询、更新等核心数据操作
+ * - 管理用户会话和Token生成机制
+ * - 支持用户数据的缓存和持久化存储
+ * 
+ * 技术特点：
+ * - 基于Dubbo提供分布式RPC服务
+ * - 集成Spring框架的依赖注入和事务管理
+ * - 使用内存数据库模拟用户数据存储（演示用途）
+ * - 实现用户密码的MD5加密和验证
+ * 
+ * 服务配置：
+ * - Dubbo版本：1.0.0
+ * - 服务分组：game
+ * - 超时时间：3000ms
+ * 
+ * 业务流程：
+ * 1. 用户登录：验证账号密码 → 生成Token → 返回用户信息
+ * 2. 信息查询：根据ID或账号查询用户详细信息
+ * 3. 信息更新：更新用户昵称、头像等可修改字段
+ * 4. 账号检查：验证账号是否已存在，用于注册验证
+ * 
+ * 安全措施：
+ * - 密码采用MD5加密存储
+ * - Token具有时效性和唯一性
+ * - 登录日志记录和异常监控
  *
  * @author lx
  * @date 2024-01-01

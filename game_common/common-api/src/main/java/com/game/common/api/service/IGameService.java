@@ -3,8 +3,30 @@ package com.game.common.api.service;
 import com.game.common.model.response.Result;
 
 /**
- * Game core service interface
- * Provides game entering, exiting and data synchronization operations
+ * 游戏核心服务接口
+ * 
+ * 功能说明：
+ * - 管理玩家进入和退出游戏的完整流程
+ * - 提供游戏数据同步和状态管理功能
+ * - 维护游戏会话的生命周期和心跳机制
+ * - 支持多种游戏类型和分布式游戏架构
+ * 
+ * 设计思路：
+ * - 分离游戏逻辑和基础框架，提供统一的游戏服务接口
+ * - 支持游戏服务器的水平扩展和负载均衡
+ * - 实现游戏状态的实时同步和持久化存储
+ * - 提供游戏会话的超时处理和异常恢复机制
+ * 
+ * 使用场景：
+ * - 玩家从大厅进入具体游戏场景
+ * - 游戏过程中的数据保存和同步
+ * - 玩家断线重连和游戏状态恢复
+ * - 游戏服务器间的负载调度和迁移
+ * 
+ * 架构特点：
+ * - 支持游戏会话的分布式管理
+ * - 提供游戏服务器的服务发现机制
+ * - 实现游戏数据的版本控制和冲突解决
  *
  * @author lx
  * @date 2024-01-01
