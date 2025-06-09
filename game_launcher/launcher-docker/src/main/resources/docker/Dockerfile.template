@@ -1,0 +1,64 @@
+# Game Service Dockerfile Template
+# Multi-stage build for optimized production images
+
+# Build stage
+FROM eclipse-temurin:21-jdk-alpine AS builder
+
+# Set working directory
+WORKDIR /app
+
+# Copy Maven wrapper and pom files
+COPY .mvn/ .mvn/
+COPY mvnw pom.xml ./
+COPY game_common/ game_common/
+COPY game_frame/ game_frame/
+COPY game_service/ game_service/
+
+# Copy specific service files
+ARG SERVICE_NAME
+COPY game_service/${SERVICE_NAME}/ game_service/${SERVICE_NAME}/
+
+# Build the application
+RUN ./mvnw clean package -pl game_service/${SERVICE_NAME} -am -DskipTests
+
+# Runtime stage
+FROM eclipse-temurin:21-jre-alpine
+
+# Install dependencies and create user
+RUN apk --no-cache add curl && \
+    addgroup -g 1001 gameuser && \
+    adduser -D -u 1001 -G gameuser gameuser
+
+# Set working directory
+WORKDIR /app
+
+# Copy built jar from builder stage
+ARG SERVICE_NAME
+COPY --from=builder /app/game_service/${SERVICE_NAME}/target/*.jar app.jar
+
+# Change ownership
+RUN chown -R gameuser:gameuser /app
+
+# Switch to non-root user
+USER gameuser
+
+# Environment variables
+ENV SERVICE_NAME=${SERVICE_NAME}
+ENV JAVA_OPTS="-Xms512m -Xmx2g -XX:+UseContainerSupport -XX:MaxRAMPercentage=75"
+ENV SPRING_PROFILES_ACTIVE=docker
+
+# Expose port (will be overridden by specific services)
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# Entry point
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+
+# Labels
+LABEL maintainer="lx"
+LABEL service.name="${SERVICE_NAME}"
+LABEL service.version="1.0.0-SNAPSHOT"
+LABEL service.description="Game ${SERVICE_NAME} service"

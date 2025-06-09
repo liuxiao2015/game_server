@@ -1,0 +1,271 @@
+version: '3.8'
+
+# Game Server Docker Compose Configuration
+# Defines all services and their dependencies
+
+services:
+  # Service Discovery
+  nacos:
+    image: nacos/nacos-server:v2.3.0
+    container_name: game-nacos
+    environment:
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      - MYSQL_SERVICE_HOST=mysql
+      - MYSQL_SERVICE_DB_NAME=nacos_config
+      - MYSQL_SERVICE_USER=nacos
+      - MYSQL_SERVICE_PASSWORD=nacos123
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./logs/nacos:/home/nacos/logs
+    networks:
+      - game-network
+    restart: unless-stopped
+
+  # Database
+  mysql:
+    image: mysql:8.0
+    container_name: game-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_DATABASE=nacos_config
+      - MYSQL_USER=nacos
+      - MYSQL_PASSWORD=nacos123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - game-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    restart: unless-stopped
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: game-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - game-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+
+  # RocketMQ Namesrv
+  rocketmq-namesrv:
+    image: foxiswho/rocketmq:4.8.0
+    container_name: game-rocketmq-namesrv
+    ports:
+      - "9876:9876"
+    environment:
+      - JAVA_OPT_EXT=-Xms256m -Xmx256m
+    command: sh mqnamesrv
+    volumes:
+      - rocketmq-logs:/home/rocketmq/logs
+    networks:
+      - game-network
+    restart: unless-stopped
+
+  # RocketMQ Broker
+  rocketmq-broker:
+    image: foxiswho/rocketmq:4.8.0
+    container_name: game-rocketmq-broker
+    ports:
+      - "10909:10909"
+      - "10911:10911"
+      - "10912:10912"
+    environment:
+      - JAVA_OPT_EXT=-Xms256m -Xmx256m
+    command: sh mqbroker -n rocketmq-namesrv:9876 -c /home/rocketmq/conf/broker.conf
+    depends_on:
+      - rocketmq-namesrv
+    volumes:
+      - rocketmq-logs:/home/rocketmq/logs
+      - rocketmq-store:/home/rocketmq/store
+      - ./config/rocketmq/broker.conf:/home/rocketmq/conf/broker.conf
+    networks:
+      - game-network
+    restart: unless-stopped
+
+  # ElasticSearch
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: game-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - game-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Gateway Service
+  service-gateway:
+    build:
+      context: .
+      dockerfile: game_launcher/launcher-docker/src/main/resources/docker/Dockerfile.template
+      args:
+        - SERVICE_NAME=service-gateway
+    container_name: game-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - NACOS_SERVER_ADDR=nacos:8848
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      nacos:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    networks:
+      - game-network
+    restart: unless-stopped
+
+  # Logic Service
+  service-logic:
+    build:
+      context: .
+      dockerfile: game_launcher/launcher-docker/src/main/resources/docker/Dockerfile.template
+      args:
+        - SERVICE_NAME=service-logic
+    container_name: game-logic
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - NACOS_SERVER_ADDR=nacos:8848
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+    depends_on:
+      nacos:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - game-network
+    restart: unless-stopped
+
+  # Chat Service
+  service-chat:
+    build:
+      context: .
+      dockerfile: game_launcher/launcher-docker/src/main/resources/docker/Dockerfile.template
+      args:
+        - SERVICE_NAME=service-chat
+    container_name: game-chat
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - NACOS_SERVER_ADDR=nacos:8848
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT=9200
+      - ROCKETMQ_NAMESRV_ADDR=rocketmq-namesrv:9876
+    depends_on:
+      nacos:
+        condition: service_started
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      rocketmq-namesrv:
+        condition: service_started
+    networks:
+      - game-network
+    restart: unless-stopped
+
+  # Payment Service
+  service-payment:
+    build:
+      context: .
+      dockerfile: game_launcher/launcher-docker/src/main/resources/docker/Dockerfile.template
+      args:
+        - SERVICE_NAME=service-payment
+    container_name: game-payment
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - NACOS_SERVER_ADDR=nacos:8848
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+    depends_on:
+      nacos:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - game-network
+    restart: unless-stopped
+
+  # Match Service
+  service-match:
+    build:
+      context: .
+      dockerfile: game_launcher/launcher-docker/src/main/resources/docker/Dockerfile.template
+      args:
+        - SERVICE_NAME=service-match
+    container_name: game-match
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - NACOS_SERVER_ADDR=nacos:8848
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      nacos:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    networks:
+      - game-network
+    restart: unless-stopped
+
+networks:
+  game-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  redis-data:
+  elasticsearch-data:
+  rocketmq-logs:
+  rocketmq-store:
