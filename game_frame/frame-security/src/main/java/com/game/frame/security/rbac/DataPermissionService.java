@@ -130,7 +130,7 @@ public class DataPermissionService {
             
         } catch (Exception e) {
             logger.error("Failed to filter accessible fields for user: {} resource: {}", userId, resource, e);
-            return data; // 发生错误时返回原始数据
+            return Collections.emptyMap(); // 发生错误时返回空映射以确保安全
         }
     }
     
