@@ -1,0 +1,135 @@
+permissions:
+  - code: user.view
+    name: 查看用户
+    resource: user
+    action: read
+    description: 允许查看用户基本信息
+    
+  - code: user.edit
+    name: 编辑用户
+    resource: user  
+    action: write
+    description: 允许编辑用户信息
+    
+  - code: user.delete
+    name: 删除用户
+    resource: user
+    action: delete
+    description: 允许删除用户账户
+    
+  - code: admin.access
+    name: 管理员访问
+    resource: admin
+    action: access
+    description: 允许访问管理员功能
+    
+  - code: game.play
+    name: 游戏游玩
+    resource: game
+    action: play
+    description: 允许进入游戏并游玩
+    
+  - code: game.trade
+    name: 游戏交易
+    resource: game
+    action: trade
+    description: 允许进行游戏内交易
+    
+  - code: game.chat
+    name: 游戏聊天
+    resource: game
+    action: chat
+    description: 允许在游戏内聊天
+    
+  - code: economy.view
+    name: 查看经济数据
+    resource: economy
+    action: read
+    description: 允许查看游戏经济数据
+    
+  - code: economy.manage
+    name: 管理经济系统
+    resource: economy
+    action: manage
+    description: 允许管理游戏经济系统
+    
+  - code: security.audit
+    name: 安全审计
+    resource: security
+    action: audit
+    description: 允许查看安全审计日志
+    
+  - code: security.config
+    name: 安全配置
+    resource: security
+    action: config
+    description: 允许修改安全配置
+
+roles:
+  - code: GUEST
+    name: 访客
+    description: 基础访客权限
+    permissions:
+      - user.view
+      
+  - code: USER
+    name: 普通用户
+    description: 已注册的普通用户
+    permissions:
+      - user.view
+      - user.edit
+      - game.play
+      - game.chat
+      
+  - code: VIP
+    name: VIP用户
+    description: VIP付费用户
+    permissions:
+      - user.view
+      - user.edit
+      - game.play
+      - game.chat
+      - game.trade
+      
+  - code: MODERATOR
+    name: 版主
+    description: 游戏版主
+    permissions:
+      - user.view
+      - user.edit
+      - game.play
+      - game.chat
+      - game.trade
+      - security.audit
+      
+  - code: ADMIN
+    name: 管理员
+    description: 系统管理员
+    permissions:
+      - user.view
+      - user.edit
+      - user.delete
+      - admin.access
+      - game.play
+      - game.chat
+      - game.trade
+      - economy.view
+      - economy.manage
+      - security.audit
+      - security.config
+      
+  - code: SUPER_ADMIN
+    name: 超级管理员
+    description: 系统超级管理员，拥有所有权限
+    permissions:
+      - user.view
+      - user.edit
+      - user.delete
+      - admin.access
+      - game.play
+      - game.chat
+      - game.trade
+      - economy.view
+      - economy.manage
+      - security.audit
+      - security.config
