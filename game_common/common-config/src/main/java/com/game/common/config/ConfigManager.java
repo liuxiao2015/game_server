@@ -42,7 +42,19 @@ public class ConfigManager {
                     throw new IllegalArgumentException("Config file not found: config/" + fileName);
                 }
                 
-                Object loadedConfig = objectMapper.readValue(inputStream, clazz);
+                Object loadedConfig;
+                try {
+                    // Attempt to load as a single object
+                    loadedConfig = objectMapper.readValue(inputStream, clazz);
+                } catch (com.fasterxml.jackson.databind.JsonMappingException e) {
+                    // If single object deserialization fails, try loading as a list
+                    loadedConfig = objectMapper.readValue(inputStream, objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
+                    if (loadedConfig instanceof List<?> list && list.size() == 1) {
+                        loadedConfig = list.get(0); // Use the first element if it's a single-element list
+                    } else {
+                        throw new IllegalArgumentException("Config file must contain a single object or a single-element array: " + fileName);
+                    }
+                }
                 logger.info("Loaded config: {} from {}", clazz.getSimpleName(), fileName);
                 return loadedConfig;
                 
