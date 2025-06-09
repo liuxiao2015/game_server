@@ -71,7 +71,7 @@ public class ChatServiceImpl implements ChatService {
             channelManager.broadcastToChannel(channelId, message);
             
             // Store for offline users
-            offlineMessageService.storeOfflineMessage(channelId, message);
+            offlineMessageService.storeOfflineMessageForChannel(channelId, message);
             
             logger.debug("Message sent successfully: {} to channel: {}", messageId, channelId);
             return messageId;

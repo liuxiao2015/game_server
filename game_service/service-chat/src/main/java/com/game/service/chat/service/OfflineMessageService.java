@@ -35,7 +35,7 @@ public class OfflineMessageService {
     /**
      * Store offline message for users in a channel
      */
-    public void storeOfflineMessage(Long channelId, ChatMessage message) {
+    public void storeOfflineMessageForChannel(Long channelId, ChatMessage message) {
         try {
             // Get channel members who are offline
             // This would typically integrate with the session manager to check online status
@@ -57,7 +57,7 @@ public class OfflineMessageService {
     /**
      * Store offline message for specific user
      */
-    public void storeOfflineMessage(Long userId, ChatMessage message) {
+    public void storeOfflineMessageForUser(Long userId, ChatMessage message) {
         try {
             String messageKey = OFFLINE_MESSAGE_KEY_PREFIX + "user:" + userId;
             
