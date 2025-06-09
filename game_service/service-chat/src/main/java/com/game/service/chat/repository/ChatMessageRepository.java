@@ -32,7 +32,7 @@ public interface ChatMessageRepository extends ElasticsearchRepository<ChatMessa
     /**
      * Find messages by channel and time range
      */
-    List<ChatMessage> findByChannelIdAndTimestampBetweenAndDeletedFalseOrderByTimestampDesc(
+    Page<ChatMessage> findByChannelIdAndTimestampBetweenAndDeletedFalseOrderByTimestampDesc(
             Long channelId, LocalDateTime startTime, LocalDateTime endTime, Pageable pageable);
 
     /**
