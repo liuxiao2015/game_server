@@ -39,6 +39,21 @@
             <artifactId>common-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.game</groupId>
+            <artifactId>common-game</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.game</groupId>
+            <artifactId>common-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.game</groupId>
+            <artifactId>common-protocol</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- Spring Boot Starter -->
         <dependency>

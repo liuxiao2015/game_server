@@ -25,6 +25,7 @@
         <module>common-entity</module>
         <module>common-protocol</module>
         <module>common-config</module>
+        <module>common-game</module>
     </modules>
 
 </project>
