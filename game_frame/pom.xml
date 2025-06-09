@@ -24,6 +24,5 @@
         <module>frame-dubbo</module>
         <module>frame-data</module>
         <module>frame-timer</module>
-        <module>frame-security</module>
     </modules>
 </project>
