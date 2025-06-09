@@ -14,8 +14,38 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 /**
- * Login message handler
- * Processes client login requests by calling UserService via Dubbo RPC
+ * 登录消息处理器
+ * 
+ * 功能说明：
+ * - 处理客户端发送的登录请求消息
+ * - 通过Dubbo RPC调用后端用户服务进行认证
+ * - 将登录结果转换为网络消息回复给客户端
+ * - 管理客户端会话的建立和状态维护
+ * 
+ * 处理流程：
+ * 1. 接收客户端的登录消息请求
+ * 2. 解析消息内容，提取账号密码等认证信息
+ * 3. 调用UserService进行用户认证和验证
+ * 4. 根据认证结果生成相应的响应消息
+ * 5. 将响应消息发送回客户端
+ * 6. 更新会话状态和用户在线信息
+ * 
+ * 技术特点：
+ * - 基于Spring组件化设计，支持依赖注入
+ * - 集成Dubbo RPC客户端，实现分布式服务调用
+ * - 使用Jackson进行JSON消息的序列化和反序列化
+ * - 支持异步消息处理，提高并发性能
+ * 
+ * 错误处理：
+ * - 网络异常的重试机制
+ * - 认证失败的错误码返回
+ * - 会话状态异常的清理机制
+ * - 详细的日志记录便于问题排查
+ * 
+ * 安全考虑：
+ * - 请求频率限制，防止暴力破解
+ * - 敏感信息脱敏，保护用户隐私
+ * - 会话Token的安全生成和验证
  *
  * @author lx
  * @date 2024-01-01

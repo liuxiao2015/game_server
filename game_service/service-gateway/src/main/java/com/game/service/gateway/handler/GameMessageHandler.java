@@ -16,6 +16,30 @@ import org.springframework.stereotype.Component;
  * @date 2024-01-01
  */
 @Component
+/**
+ * GameMessage处理器
+ * 
+ * 功能说明：
+ * - 处理特定类型的请求或消息
+ * - 实现业务逻辑的具体处理流程
+ * - 提供请求验证和响应封装功能
+ * - 支持异步处理和错误处理机制
+ * 
+ * 处理流程：
+ * 1. 接收请求或消息数据
+ * 2. 验证请求参数的有效性
+ * 3. 执行具体的业务逻辑处理
+ * 4. 封装处理结果并返回响应
+ * 5. 记录处理日志和性能统计
+ * 
+ * 技术特点：
+ * - 基于Spring框架的依赖注入
+ * - 支持事务管理和异常处理
+ * - 集成缓存和数据访问组件
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class GameMessageHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GameMessageHandler.class);

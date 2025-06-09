@@ -11,6 +11,28 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "gateway")
+/**
+ * Gateway配置类
+ * 
+ * 功能说明：
+ * - 定义系统或模块的配置参数
+ * - 支持配置的动态加载和热更新
+ * - 提供配置验证和默认值管理
+ * - 集成Spring配置管理机制
+ * 
+ * 配置项说明：
+ * - 包含系统运行所需的关键参数
+ * - 支持环境变量和配置文件的参数覆盖
+ * - 提供配置项的验证和约束检查
+ * 
+ * 使用方式：
+ * - 通过@ConfigurationProperties注解绑定配置
+ * - 支持@Value注解注入单个配置项
+ * - 可通过Environment接口动态获取配置
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class GatewayConfig {
     
     private int port = 8888;

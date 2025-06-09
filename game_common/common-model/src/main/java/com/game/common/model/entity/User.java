@@ -5,8 +5,40 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
 /**
- * User entity
- * Contains user ID, nickname, level, creation time and other user information
+ * 用户实体类
+ * 
+ * 功能说明：
+ * - 封装用户的基础信息和游戏数据
+ * - 提供用户账号、昵称、等级、经验值等核心属性
+ * - 支持用户创建时间、最后登录时间等时间戳记录
+ * - 实现序列化接口，支持网络传输和持久化存储
+ * 
+ * 数据字段：
+ * - userId: 用户唯一标识ID，系统自动生成
+ * - account: 用户登录账号，可以是用户名、邮箱或手机号
+ * - nickname: 用户昵称，用于游戏内显示
+ * - level: 用户等级，反映游戏进度和成就
+ * - experience: 用户经验值，用于等级计算
+ * - avatar: 用户头像URL或标识
+ * - createTime: 账号创建时间戳
+ * - lastLoginTime: 最后登录时间戳
+ * 
+ * 设计特点：
+ * - 实现Serializable接口，支持对象序列化
+ * - 使用Jackson注解，支持JSON格式转换
+ * - 字段验证和约束，确保数据完整性
+ * - 扩展性设计，便于添加新的用户属性
+ * 
+ * 使用场景：
+ * - 用户登录时的身份信息传递
+ * - 游戏内用户信息展示
+ * - 用户数据的持久化存储
+ * - 分布式服务间的用户信息共享
+ * 
+ * 注意事项：
+ * - 不包含敏感信息如密码、支付密码等
+ * - 所有时间字段使用时间戳格式存储
+ * - 支持部分字段的空值处理
  *
  * @author lx
  * @date 2024-01-01
