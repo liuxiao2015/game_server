@@ -268,6 +268,7 @@ public class RpcServiceManager {
             
         } catch (Exception e) {
             logger.error("检查服务实例健康状态时发生异常: {}", serviceName, e);
+            lastHealthCheckTime = System.currentTimeMillis(); // Update the throttle timestamp on error
             return false;
         }
     }
