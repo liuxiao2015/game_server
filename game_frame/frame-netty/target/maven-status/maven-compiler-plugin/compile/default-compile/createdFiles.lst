@@ -6,11 +6,11 @@ com/game/frame/netty/server/NettyServer.class
 com/game/frame/netty/server/HeartbeatHandler$1.class
 com/game/frame/netty/server/SessionKeys.class
 com/game/frame/netty/server/BusinessHandler.class
-com/game/frame/netty/config/NettyServerConfig.class
 com/game/frame/netty/handler/MessageDispatcher.class
 com/game/frame/netty/handler/MessageHandler.class
+com/game/frame/netty/config/NettyServerConfig.class
 com/game/frame/netty/protocol/ProtobufEncoder.class
 com/game/frame/netty/server/ExceptionHandler.class
 com/game/frame/netty/session/Session.class
-com/game/frame/netty/session/SessionManager.class
 com/game/frame/netty/protocol/ProtobufDecoder.class
+com/game/frame/netty/session/SessionManager.class
