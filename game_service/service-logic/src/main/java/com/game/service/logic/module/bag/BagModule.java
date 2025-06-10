@@ -12,29 +12,84 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 背包模块
- * 负责背包初始化、物品管理、容量控制
+ * 
+ * 功能说明：
+ * - 负责游戏背包系统的核心数据管理和业务逻辑
+ * - 提供背包的初始化、物品增删、容量控制等功能
+ * - 支持物品的使用、查询、整理等常用操作
+ * - 管理玩家物品数据的存储和访问
+ * 
+ * 设计思路：
+ * - 采用内存存储提供高性能的物品操作
+ * - 使用线程安全的数据结构支持并发访问
+ * - 通过物品唯一ID区分同类型的不同物品实例
+ * - 提供灵活的容量管理和扩展机制
+ * 
+ * 核心功能：
+ * - 背包初始化：为新玩家创建背包数据和设置默认容量
+ * - 物品管理：添加、使用、查询背包中的物品
+ * - 容量控制：检查背包空间，防止超出容量限制
+ * - 数据查询：获取背包的完整信息和统计数据
+ * 
+ * 数据结构：
+ * - 物品列表：存储玩家拥有的所有物品实例
+ * - 容量映射：记录每个玩家的背包最大容量
+ * - 唯一ID：为每个物品实例分配全局唯一标识
+ * 
+ * 使用场景：
+ * - 游戏奖励发放和物品获得
+ * - 玩家背包界面的数据展示
+ * - 物品使用和消耗的处理
+ * - 背包整理和容量扩展
  *
- * @author lx
+ * @author lx 
  * @date 2025/06/08
  */
 public class BagModule {
     
+    // 日志记录器，用于记录背包操作的关键信息和调试数据
     private static final Logger logger = LoggerFactory.getLogger(BagModule.class);
+    // 默认背包容量，新玩家初始化时的标准背包大小
     private static final int DEFAULT_BAG_SIZE = 100;
+    // 物品唯一ID生成器，确保每个物品实例都有全局唯一的标识
     private static final AtomicLong itemUidGenerator = new AtomicLong(1);
     
-    // 玩家背包数据 playerId -> List<Item>
+    // 玩家背包数据存储：玩家ID -> 物品列表
+    // 使用 ConcurrentHashMap 保证多线程环境下的数据安全
     private final ConcurrentHashMap<Long, List<Item>> playerBags = new ConcurrentHashMap<>();
-    // 玩家背包容量 playerId -> capacity
+    // 玩家背包容量配置：玩家ID -> 背包容量
+    // 支持个性化的背包容量设置和动态扩展
     private final ConcurrentHashMap<Long, Integer> bagCapacities = new ConcurrentHashMap<>();
     
     /**
-     * 初始化玩家背包
+     * 初始化玩家背包数据
+     * 
+     * 功能说明：
+     * - 为指定玩家创建全新的背包数据结构
+     * - 初始化空的物品列表和默认的背包容量
+     * - 确保背包数据的正确初始化和内存分配
+     * 
+     * 初始化内容：
+     * - 创建空的物品列表（ArrayList）用于存储物品
+     * - 设置默认背包容量为100个物品槽位
+     * - 建立玩家ID与背包数据的映射关系
+     * 
+     * 调用时机：
+     * - 玩家首次登录游戏时
+     * - 玩家数据重置或清空时
+     * - 服务器重启后的数据恢复时
+     * 
+     * @param playerId 玩家唯一标识ID
+     * 
+     * 注意事项：
+     * - 如果玩家已有背包数据，会被重新初始化（慎用）
+     * - 初始化后的背包为空，需要从数据库加载历史数据
+     * - 该操作是线程安全的，支持并发调用
      */
     public void initPlayerBag(long playerId) {
         playerBags.put(playerId, new ArrayList<>());
         bagCapacities.put(playerId, DEFAULT_BAG_SIZE);
-        logger.info("Initialized bag for player: {}", playerId);
+        logger.info("初始化玩家背包: playerId={}, capacity={}", playerId, DEFAULT_BAG_SIZE);
     }
     
     /**

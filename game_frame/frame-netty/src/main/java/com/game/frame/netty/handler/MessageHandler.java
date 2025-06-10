@@ -3,18 +3,37 @@ package com.game.frame.netty.handler;
 import com.game.frame.netty.session.Session;
 
 /**
- * Message handler /**
- * defining
+ * 消息处理器接口
  * 
  * 功能说明：
- * - 提供核心业务功能实现
- * - 支持模块化设计和扩展
- * - 集成框架的标准组件和服务
- *
- * @author lx
- * @date 2024-01-01
- */
-interface defining processing methods and supported message types
+ * - 定义消息处理的标准接口和处理方法
+ * - 支持泛型类型安全的消息处理机制
+ * - 提供会话相关的消息处理上下文
+ * - 集成框架的消息分发和路由系统
+ * 
+ * 设计思路：
+ * - 采用泛型接口支持不同类型的消息处理
+ * - 通过会话对象提供消息来源和响应通道
+ * - 定义统一的处理方法签名便于框架调用
+ * - 支持消息处理器的插件化和模块化管理
+ * 
+ * 核心功能：
+ * - 消息接收：从网络层接收各种类型的消息
+ * - 消息处理：执行具体的业务逻辑和数据处理
+ * - 响应生成：生成处理结果并返回给客户端
+ * - 会话管理：访问和操作消息相关的会话信息
+ * 
+ * 实现要求：
+ * - 处理方法必须是线程安全的
+ * - 异常处理需要妥善处理和记录
+ * - 处理结果需要及时响应给客户端
+ * - 支持异步处理和批量处理机制
+ * 
+ * 使用场景：
+ * - 游戏业务消息的处理和分发
+ * - 客户端请求的响应和处理
+ * - 系统内部消息的传递和处理
+ * - 跨服务的消息通信和协调
  *
  * @author lx
  * @date 2024-01-01
@@ -22,33 +41,82 @@ interface defining processing methods and supported message types
 public interface MessageHandler<T> {
     
     /**
-     * Handles an incoming message
+     * 处理接收到的消息
      * 
-     * @param session the session that sent the message
-     * @param message the message to handle
+     * 功能说明：
+     * - 处理从客户端或其他服务发送的消息
+     * - 执行具体的业务逻辑和数据操作
+     * - 通过会话对象发送响应消息给客户端
+     * 
+     * 处理流程：
+     * 1. 验证消息的格式和内容有效性
+     * 2. 从会话中获取用户信息和上下文数据
+     * 3. 执行具体的业务逻辑处理
+     * 4. 生成处理结果并封装响应消息
+     * 5. 通过会话发送响应给客户端
+     * 
+     * @param session 发送消息的会话对象，包含用户信息和连接通道
+     * @param message 待处理的消息对象，具体类型由泛型T决定
+     * 
+     * 实现注意事项：
+     * - 方法必须是线程安全的，支持并发调用
+     * - 处理过程中的异常需要妥善捕获和处理
+     * - 长时间的处理操作建议使用异步方式
+     * - 确保及时响应客户端，避免超时
      */
     void handle(Session session, T message);
     
     /**
-     * Gets the message type this handler supports
+     * 获取支持的消息类型
      * 
-     * @return message class type
+     * 功能说明：
+     * - 返回当前处理器能够处理的消息类型
+     * - 用于消息路由和分发系统的类型匹配
+     * - 支持运行时的类型检查和验证
+     * 
+     * @return 消息类型的Class对象
      */
-    Class<T> getMessageType();
+    default Class<T> getMessageType() {
+        return null; // 子类可以重写此方法返回具体的消息类型
+    }
     
     /**
-     * Gets the message ID this handler supports
+     * 获取处理器的优先级
      * 
-     * @return message ID
+     * 功能说明：
+     * - 定义处理器在消息分发中的优先级
+     * - 数值越小优先级越高
+     * - 用于处理器链的排序和调度
+     * 
+     * @return 优先级数值，默认为0（普通优先级）
+     */
+    default int getPriority() {
+        return 0;
+    }
+    
+    /**
+     * 获取消息ID
+     * 
+     * 功能说明：
+     * - 返回当前处理器处理的消息类型ID
+     * - 用于消息路由和分发系统的ID匹配
+     * - 每个消息类型都应该有唯一的消息ID
+     * 
+     * @return 消息类型的唯一标识ID
      */
     int getMessageId();
     
     /**
-     * Checks if this handler requires authentication
+     * 是否需要身份认证
      * 
-     * @return true if authentication required
+     * 功能说明：
+     * - 指示处理当前消息是否需要用户身份认证
+     * - 用于安全检查和权限验证
+     * - 未认证用户无法处理需要认证的消息
+     * 
+     * @return true表示需要认证，false表示不需要认证
      */
     default boolean requiresAuthentication() {
-        return true;
+        return true; // 默认需要认证，保证安全性
     }
 }
