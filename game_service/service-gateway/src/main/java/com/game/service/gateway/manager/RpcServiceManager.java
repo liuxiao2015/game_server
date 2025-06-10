@@ -184,8 +184,11 @@ public class RpcServiceManager {
             long currentTime = System.currentTimeMillis();
             
             // 检查是否需要进行健康检查（避免频繁检查）
-            if (currentTime - lastHealthCheckTime < HEALTH_CHECK_INTERVAL_MS) {
-                return allServicesHealthy;
+            synchronized (this) {
+                if (currentTime - lastHealthCheckTime < HEALTH_CHECK_INTERVAL_MS) {
+                    return allServicesHealthy;
+                }
+                lastHealthCheckTime = currentTime;
             }
             
             logger.debug("开始执行RPC服务健康检查");
