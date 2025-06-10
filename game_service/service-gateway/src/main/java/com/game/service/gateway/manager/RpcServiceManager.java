@@ -257,12 +257,10 @@ public class RpcServiceManager {
             }
             
             // 这里可以扩展为更复杂的健康检查，例如：
+            // TODO: Implement health check when HealthCheckable interface is available
             // - 调用服务的ping方法
             // - 检查服务响应时间
             // - 验证服务版本兼容性
-            // if (serviceInstance instanceof HealthCheckable) {
-            //     isHealthy = ((HealthCheckable) serviceInstance).ping();
-            // }
             
             return isHealthy;
             
