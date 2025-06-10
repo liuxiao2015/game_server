@@ -1,5 +1,6 @@
 package com.game.frame.data.annotation;
 
+import com.game.frame.data.datasource.DataSourceType;
 import com.game.frame.data.datasource.DynamicDataSourceContext;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -158,11 +159,11 @@ public class DataSourceAspect {
         }
         
         // 保存原始数据源上下文，支持嵌套切换
-        String originalDataSource = DynamicDataSourceContext.getDataSourceType();
+        DataSourceType originalDataSource = DynamicDataSourceContext.getDataSourceType();
         
         if (dataSource != null) {
             // 设置目标数据源到当前线程上下文
-            String targetDataSource = dataSource.value();
+            DataSourceType targetDataSource = dataSource.value();
             DynamicDataSourceContext.setDataSourceType(targetDataSource);
             
             logger.debug("数据源切换 - 目标数据源: {}, 方法: {}.{}, 原数据源: {}", 

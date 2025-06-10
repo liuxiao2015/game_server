@@ -176,7 +176,7 @@ public class LoginMessageHandler {
                     session.getSessionId(), response.getData().getUserId(), 
                     response.getData().getToken());
             
-            // session.sendMessage(serializedResponse);
+            // TODO: Implement actual message sending
         } catch (Exception e) {
             logger.error("Failed to send login response", e);
         }
@@ -188,8 +188,7 @@ public class LoginMessageHandler {
     private void sendLoginError(Session session, String errorMessage) {
         try {
             logger.warn("Sending login error to session {}: {}", session.getSessionId(), errorMessage);
-            // In real implementation, send error response via session
-            // session.sendMessage(errorResponse);
+            // TODO: Implement error response sending
         } catch (Exception e) {
             logger.error("Failed to send login error response", e);
         }
