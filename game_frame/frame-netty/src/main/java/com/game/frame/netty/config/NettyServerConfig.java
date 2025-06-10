@@ -9,6 +9,17 @@ import com.game.common.Constants;
  * @author lx
  * @date 2024-01-01
  */
+/**
+ * NettyServer配置类
+ * 
+ * 功能说明：
+ * - 配置系统或模块的参数和属性
+ * - 支持配置的自动加载和验证
+ * - 集成Spring Boot配置管理机制
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class NettyServerConfig {
     
     private int port = Constants.DEFAULT_PORT;

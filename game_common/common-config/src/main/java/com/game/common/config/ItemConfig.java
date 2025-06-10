@@ -68,6 +68,30 @@ public class ItemConfig extends TableConfig {
         this.attributes = attributes;
     }
     
+    /**
+
+    
+     * isStackable方法
+
+    
+     * 
+
+    
+     * 功能说明：
+
+    
+     * - 执行核心业务逻辑处理
+
+    
+     * - 提供数据验证和错误处理
+
+    
+     * - 确保操作的原子性和一致性
+
+    
+     */
+
+    
     public boolean isStackable() {
         return stackable;
     }

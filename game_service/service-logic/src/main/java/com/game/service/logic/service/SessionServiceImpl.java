@@ -22,6 +22,30 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2024-01-01
  */
 @DubboService(version = "1.0.0", group = "game", timeout = 3000)
+/**
+ * Session服务实现类
+ * 
+ * 功能说明：
+ * - 实现对应服务接口的具体业务逻辑
+ * - 提供完整的数据操作和业务处理功能
+ * - 集成缓存、数据库等基础设施组件
+ * - 支持事务管理和异常处理
+ * 
+ * 实现特点：
+ * - 基于Spring框架的服务层设计
+ * - 使用依赖注入管理组件依赖关系
+ * - 支持声明式事务和AOP切面编程
+ * - 提供完善的日志记录和监控
+ * 
+ * 业务功能：
+ * - 数据验证和业务规则校验
+ * - 数据持久化和缓存管理
+ * - 外部服务调用和集成
+ * - 异步处理和消息通知
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class SessionServiceImpl implements ISessionService {
 
     private static final Logger logger = LoggerFactory.getLogger(SessionServiceImpl.class);

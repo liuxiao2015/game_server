@@ -5,8 +5,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
 /**
- * Base response class for all API responses
- * Contains common fields like response code, message, data, timestamp
+ * Base响应对象
+ * 
+ * 功能说明：
+ * - 封装网络通信的数据传输对象
+ * - 提供数据序列化和反序列化支持
+ * - 实现参数验证和格式校验
+ * - 支持JSON和其他格式的数据转换
+ * 
+ * 数据结构：
+ * - 包含业务处理所需的核心字段
+ * - 支持可选字段和默认值设置
+ * - 提供数据完整性验证机制
+ * 
+ * 使用场景：
+ * - 客户端与服务器的数据交互
+ * - 微服务间的接口调用
+ * - API接口的参数传递
  *
  * @author lx
  * @date 2024-01-01

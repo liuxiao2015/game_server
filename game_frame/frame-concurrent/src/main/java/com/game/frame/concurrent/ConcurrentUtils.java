@@ -11,7 +11,22 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
- * Concurrent utilities for batch task execution, timeout control, and retry mechanism
+ * ConcurrentUtils类
+ * 
+ * 功能说明：
+ * - 提供核心业务功能的实现
+ * - 封装相关的数据和操作方法
+ * - 支持系统模块化和代码复用
+ * 
+ * 设计特点：
+ * - 遵循面向对象设计原则
+ * - 提供清晰的接口和实现分离
+ * - 支持扩展和维护
+ * 
+ * 使用方式：
+ * - 通过公共方法提供服务
+ * - 支持依赖注入和配置管理
+ * - 集成框架的生命周期管理
  *
  * @author lx
  * @date 2024-01-01

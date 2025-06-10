@@ -22,6 +22,17 @@ import java.util.UUID;
  * @date 2025/01/08
  */
 @Service
+/**
+ * Chat服务实现类
+ * 
+ * 功能说明：
+ * - 实现具体的业务逻辑和数据处理
+ * - 提供事务管理和异常处理
+ * - 集成缓存和数据访问功能
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class ChatServiceImpl implements ChatService {
     
     private static final Logger logger = LoggerFactory.getLogger(ChatServiceImpl.class);

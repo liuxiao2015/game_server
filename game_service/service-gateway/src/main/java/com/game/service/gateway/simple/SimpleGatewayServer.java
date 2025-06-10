@@ -16,6 +16,17 @@ import com.game.frame.netty.session.SessionManager;
  * @author lx
  * @date 2024-01-01
  */
+/**
+ * SimpleGatewayServer
+ * 
+ * 功能说明：
+ * - 提供核心业务功能实现
+ * - 支持模块化设计和扩展
+ * - 集成框架的标准组件和服务
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class SimpleGatewayServer {
     
     public static void main(String[] args) throws Exception {

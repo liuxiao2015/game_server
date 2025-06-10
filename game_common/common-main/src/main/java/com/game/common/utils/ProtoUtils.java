@@ -10,7 +10,18 @@ import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Protobuf utility class providing serialization, deserialization, and type conversion
+ * Protobuf utility /**
+ * providing
+ * 
+ * 功能说明：
+ * - 提供核心业务功能实现
+ * - 支持模块化设计和扩展
+ * - 集成框架的标准组件和服务
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
+class providing serialization, deserialization, and type conversion
  *
  * @author lx
  * @date 2024-01-01

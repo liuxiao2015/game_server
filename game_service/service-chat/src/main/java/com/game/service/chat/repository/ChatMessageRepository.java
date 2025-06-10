@@ -17,6 +17,17 @@ import java.util.List;
  * @date 2025/01/08
  */
 @Repository
+/**
+ * ChatMessage数据访问接口
+ * 
+ * 功能说明：
+ * - 提供数据持久化操作接口
+ * - 封装数据库查询和更新逻辑
+ * - 支持JPA和MyBatis数据访问
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public interface ChatMessageRepository extends ElasticsearchRepository<ChatMessage, String> {
 
     /**

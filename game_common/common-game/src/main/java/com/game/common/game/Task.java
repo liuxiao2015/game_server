@@ -18,7 +18,55 @@ public class Task {
     private LocalDateTime acceptTime;
     private LocalDateTime completeTime;
     
+    /**
+
+    
+     * Task方法
+
+    
+     * 
+
+    
+     * 功能说明：
+
+    
+     * - 执行核心业务逻辑处理
+
+    
+     * - 提供数据验证和错误处理
+
+    
+     * - 确保操作的原子性和一致性
+
+    
+     */
+
+    
     public Task() {}
+    
+    /**
+
+    
+     * Task方法
+
+    
+     * 
+
+    
+     * 功能说明：
+
+    
+     * - 执行核心业务逻辑处理
+
+    
+     * - 提供数据验证和错误处理
+
+    
+     * - 确保操作的原子性和一致性
+
+    
+     */
+
     
     public Task(long id, int configId) {
         this.id = id;

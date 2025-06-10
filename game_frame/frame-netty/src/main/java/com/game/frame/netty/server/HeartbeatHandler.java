@@ -12,6 +12,17 @@ import org.slf4j.LoggerFactory;
  * @author lx
  * @date 2024-01-01
  */
+/**
+ * Heartbeat处理器
+ * 
+ * 功能说明：
+ * - 处理特定类型的请求或事件
+ * - 实现消息路由和业务逻辑
+ * - 提供异步处理和错误处理
+ *
+ * @author lx
+ * @date 2024-01-01
+ */
 public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
     
     private static final Logger logger = LoggerFactory.getLogger(HeartbeatHandler.class);

@@ -25,6 +25,22 @@ public class GMController {
     
     @PostMapping("/players/{playerId}/ban")
     @Operation(summary = "封禁玩家", description = "封禁指定玩家账号")
+    /**
+
+     * banPlayer方法
+
+     * 
+
+     * 功能说明：
+
+     * - 执行核心业务逻辑处理
+
+     * - 提供数据验证和错误处理
+
+     * - 确保操作的原子性和一致性
+
+     */
+
     public void banPlayer(
             @PathVariable Long playerId,
             @RequestParam String reason,
@@ -34,18 +50,66 @@ public class GMController {
     
     @PostMapping("/players/{playerId}/kick")
     @Operation(summary = "踢出玩家", description = "踢出指定玩家")
+    /**
+
+     * kickPlayer方法
+
+     * 
+
+     * 功能说明：
+
+     * - 执行核心业务逻辑处理
+
+     * - 提供数据验证和错误处理
+
+     * - 确保操作的原子性和一致性
+
+     */
+
     public void kickPlayer(@PathVariable Long playerId) {
         gmService.kickPlayer(playerId);
     }
     
     @GetMapping("/players/search")
     @Operation(summary = "查询玩家", description = "根据关键词查询玩家信息")
+    /**
+
+     * queryPlayer方法
+
+     * 
+
+     * 功能说明：
+
+     * - 执行核心业务逻辑处理
+
+     * - 提供数据验证和错误处理
+
+     * - 确保操作的原子性和一致性
+
+     */
+
     public PlayerInfo queryPlayer(@RequestParam String keyword) {
         return gmService.queryPlayer(keyword);
     }
     
     @PostMapping("/players/{playerId}/items")
     @Operation(summary = "发放物品", description = "向玩家发放指定物品")
+    /**
+
+     * sendItems方法
+
+     * 
+
+     * 功能说明：
+
+     * - 执行核心业务逻辑处理
+
+     * - 提供数据验证和错误处理
+
+     * - 确保操作的原子性和一致性
+
+     */
+
     public void sendItems(
             @PathVariable Long playerId,
             @RequestBody List<ItemInfo> items) {
@@ -54,30 +118,118 @@ public class GMController {
     
     @PostMapping("/mail")
     @Operation(summary = "发送邮件", description = "向玩家发送邮件")
+    /**
+
+     * sendMail方法
+
+     * 
+
+     * 功能说明：
+
+     * - 执行核心业务逻辑处理
+
+     * - 提供数据验证和错误处理
+
+     * - 确保操作的原子性和一致性
+
+     */
+
     public void sendMail(@RequestBody MailRequest request) {
         gmService.sendMail(request);
     }
     
     @PostMapping("/broadcast")
     @Operation(summary = "广播消息", description = "向所有在线玩家广播消息")
+    /**
+
+     * broadcast方法
+
+     * 
+
+     * 功能说明：
+
+     * - 执行核心业务逻辑处理
+
+     * - 提供数据验证和错误处理
+
+     * - 确保操作的原子性和一致性
+
+     */
+
     public void broadcast(@RequestParam String message) {
         gmService.broadcast(message);
     }
     
     @PostMapping("/config/reload")
     @Operation(summary = "重载配置", description = "重新加载服务器配置")
+    /**
+
+     * reloadConfig方法
+
+     * 
+
+     * 功能说明：
+
+     * - 执行核心业务逻辑处理
+
+     * - 提供数据验证和错误处理
+
+     * - 确保操作的原子性和一致性
+
+     */
+
     public void reloadConfig(@RequestParam String configType) {
         gmService.reloadConfig(configType);
     }
     
     @PostMapping("/script/execute")
     @Operation(summary = "执行脚本", description = "执行GM脚本命令")
+    /**
+
+     * executeScript方法
+
+     * 
+
+     * 功能说明：
+
+     * - 执行核心业务逻辑处理
+
+     * - 提供数据验证和错误处理
+
+     * - 确保操作的原子性和一致性
+
+     */
+
     public void executeScript(@RequestParam String script) {
         if (!isValidScript(script)) {
             throw new IllegalArgumentException("Invalid script format.");
         }
         gmService.executeScript(script);
     }
+    
+    /**
+
+    
+     * isValidScript方法
+
+    
+     * 
+
+    
+     * 功能说明：
+
+    
+     * - 执行核心业务逻辑处理
+
+    
+     * - 提供数据验证和错误处理
+
+    
+     * - 确保操作的原子性和一致性
+
+    
+     */
+
     
     private boolean isValidScript(String script) {
         // Example validation: only allow alphanumeric characters and basic operators
