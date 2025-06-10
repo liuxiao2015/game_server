@@ -318,8 +318,8 @@ public class RpcServiceManager {
         logger.warn("RPC服务调用失败: {}, 失败原因: {}", serviceName, exception.getMessage());
         
         // 如果失败频繁，可以考虑暂时标记为不健康
-        long recentFailureRate = failedServiceCalls.get() * 100 / Math.max(totalServiceCalls.get(), 1);
-        if (recentFailureRate > 50) { // 失败率超过50%
+        double recentFailureRate = (failedServiceCalls.get() * 100.0) / Math.max(totalServiceCalls.get(), 1);
+        if (recentFailureRate > 50.0) { // 失败率超过50%
             allServicesHealthy = false;
             logger.error("RPC服务失败率过高: {}%, 暂时标记为不健康状态", recentFailureRate);
         }
