@@ -6,8 +6,8 @@
 /home/runner/work/game_server/game_server/game_frame/frame-netty/src/main/java/com/game/frame/netty/protocol/MessageWrapper.java
 /home/runner/work/game_server/game_server/game_frame/frame-netty/src/main/java/com/game/frame/netty/session/SessionManager.java
 /home/runner/work/game_server/game_server/game_frame/frame-netty/src/main/java/com/game/frame/netty/handler/MessageDispatcher.java
-/home/runner/work/game_server/game_server/game_frame/frame-netty/src/main/java/com/game/frame/netty/handler/MessageHandler.java
 /home/runner/work/game_server/game_server/game_frame/frame-netty/src/main/java/com/game/frame/netty/protocol/ProtobufDecoder.java
+/home/runner/work/game_server/game_server/game_frame/frame-netty/src/main/java/com/game/frame/netty/handler/MessageHandler.java
 /home/runner/work/game_server/game_server/game_frame/frame-netty/src/main/java/com/game/frame/netty/server/BusinessHandler.java
 /home/runner/work/game_server/game_server/game_frame/frame-netty/src/main/java/com/game/frame/netty/server/ServerChannelInitializer.java
 /home/runner/work/game_server/game_server/game_frame/frame-netty/src/main/java/com/game/frame/netty/protocol/ProtobufEncoder.java

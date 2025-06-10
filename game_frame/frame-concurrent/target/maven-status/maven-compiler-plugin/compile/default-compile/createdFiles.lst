@@ -1,6 +1,6 @@
-com/game/frame/concurrent/TaskResult.class
-com/game/frame/concurrent/VirtualThreadExecutor.class
 com/game/frame/concurrent/ThreadPoolConfig$RejectionPolicy.class
+com/game/frame/concurrent/VirtualThreadExecutor.class
+com/game/frame/concurrent/TaskResult.class
 com/game/frame/concurrent/ThreadPoolConfig.class
 com/game/frame/concurrent/StructuredTaskManager.class
 com/game/frame/concurrent/ConcurrentUtils.class
