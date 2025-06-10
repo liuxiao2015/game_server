@@ -45,15 +45,14 @@
         <!-- WireMock -->
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock</artifactId>
-            <version>3.3.1</version>
+            <artifactId>wiremock-jre8</artifactId>
+            <version>2.35.1</version>
         </dependency>
         
-        <!-- Common Dependencies -->
+        <!-- Netty Dependencies -->
         <dependency>
-            <groupId>com.game</groupId>
-            <artifactId>common-core</artifactId>
-            <version>${project.version}</version>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
         </dependency>
         
         <!-- JSON Processing -->
