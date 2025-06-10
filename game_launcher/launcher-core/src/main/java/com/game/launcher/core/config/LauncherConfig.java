@@ -13,32 +13,92 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Launcher configuration
- * Manages configuration for service orchestration and deployment
+ * 游戏服务器启动器配置类
+ * 
+ * 功能说明：
+ * - 管理游戏服务器集群的配置参数和启动设置
+ * - 支持多种配置源的加载：命令行参数、配置文件、资源文件
+ * - 提供服务定义、环境变量、健康检查、日志配置的统一管理
+ * - 支持不同部署环境的配置切换和验证
+ * 
+ * 配置层级结构：
+ * - 服务定义：各个微服务的启动参数、端口、依赖关系
+ * - 环境变量：JVM参数、Spring配置、系统环境设置
+ * - 健康检查：服务健康状态监控的间隔、超时、重试配置
+ * - 日志配置：日志级别、输出格式、文件路径等设置
+ * - 运行环境：开发、测试、生产环境的差异化配置
+ * 
+ * 配置加载策略：
+ * 1. 优先使用命令行指定的配置文件
+ * 2. 其次加载classpath中的默认配置文件
+ * 3. 最后使用硬编码的默认配置
+ * 4. 支持YAML格式的配置文件解析
+ * 5. 配置加载失败时提供降级策略
+ * 
+ * 服务编排能力：
+ * - 定义微服务的启动顺序和依赖关系
+ * - 支持服务的动态扩缩容配置
+ * - 提供端口分配和冲突检测
+ * - 支持服务的启用/禁用控制
+ * 
+ * 技术特点：
+ * - 使用Jackson YAML解析器处理配置文件
+ * - 支持配置的热重载和动态更新
+ * - 提供配置验证和错误处理机制
+ * - 遵循Spring Boot配置规范
+ * 
+ * 使用场景：
+ * - 开发环境的本地服务器启动
+ * - 测试环境的自动化部署
+ * - 生产环境的服务编排
+ * - Docker容器化部署配置
+ * 
+ * 配置示例：
+ * ```yaml
+ * profile: production
+ * services:
+ *   - name: gateway
+ *     module: service-gateway
+ *     port: 8080
+ *     enabled: true
+ *     replicas: 2
+ * environment:
+ *   JAVA_OPTS: "-Xms1g -Xmx4g"
+ *   SPRING_PROFILES_ACTIVE: "production"
+ * healthCheck:
+ *   intervalSeconds: 30
+ *   timeoutSeconds: 5
+ * ```
+ * 
+ * 扩展性考虑：
+ * - 支持自定义配置解析器
+ * - 可扩展新的配置源类型
+ * - 支持配置加密和安全存储
+ * - 预留插件化配置机制
  *
  * @author lx
  * @date 2025/01/08
  */
-/**
- * Launcher配置类
- * 
- * 功能说明：
- * - 配置系统或模块的参数和属性
- * - 支持配置的自动加载和验证
- * - 集成Spring Boot配置管理机制
- *
- * @author lx
- * @date 2024-01-01
- */
 public class LauncherConfig {
     
     private static final Logger logger = LoggerFactory.getLogger(LauncherConfig.class);
+    
+    /** YAML配置文件解析器，用于读取和解析YAML格式的配置文件 */
     private static final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
     
+    /** 服务定义列表，包含所有需要启动的微服务配置信息 */
     private List<ServiceDefinition> services = new ArrayList<>();
+    
+    /** 全局环境变量配置，应用于所有启动的服务 */
     private Map<String, String> environment = new HashMap<>();
+    
+    /** 健康检查配置，定义服务健康状态监控的相关参数 */
     private HealthCheckConfig healthCheck = new HealthCheckConfig();
+    
+    /** 日志配置，统一管理所有服务的日志输出规则 */
     private LogConfig logging = new LogConfig();
+    
+    /** 运行环境标识，如development、testing、production等 */
     private String profile = "development";
 
     /**
