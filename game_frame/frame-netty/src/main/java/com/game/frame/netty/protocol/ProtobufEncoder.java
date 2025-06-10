@@ -161,9 +161,9 @@ public class ProtobufEncoder extends MessageToByteEncoder<Object> {
             // 第六阶段：记录编码成功信息
             if (logger.isDebugEnabled()) {
                 double encodingTimeMs = encodingTime / 1_000_000.0; // 转换为毫秒
-                logger.debug("消息编码成功 - 类型: {}, 大小: {}字节, 耗时: {:.3f}ms, 总计: {}条消息", 
+                logger.debug("消息编码成功 - 类型: {}, 大小: {}字节, 耗时: {}ms, 总计: {}条消息", 
                         message.getClass().getSimpleName(), messageData.length, 
-                        encodingTimeMs, totalEncodedMessages.get());
+                        String.format("%.3f", encodingTimeMs), totalEncodedMessages.get());
             }
             
         } catch (IllegalArgumentException e) {
