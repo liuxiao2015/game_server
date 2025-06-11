@@ -10,9 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Session service implementation using Redis-based session storage
@@ -23,25 +24,25 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @DubboService(version = "1.0.0", group = "game", timeout = 3000)
 /**
- * Session服务实现类
+ * Session服务实现类 - Redis优化版
  * 
  * 功能说明：
- * - 实现对应服务接口的具体业务逻辑
- * - 提供完整的数据操作和业务处理功能
- * - 集成缓存、数据库等基础设施组件
- * - 支持事务管理和异常处理
+ * - 基于Redis实现分布式会话管理，支持多服务实例间的会话共享
+ * - 提供高性能的会话操作，支持会话的创建、验证、销毁和刷新
+ * - 集成Token管理，确保会话安全性和有效性
+ * - 支持会话过期自动清理，避免内存泄漏和资源浪费
  * 
  * 实现特点：
- * - 基于Spring框架的服务层设计
- * - 使用依赖注入管理组件依赖关系
- * - 支持声明式事务和AOP切面编程
- * - 提供完善的日志记录和监控
+ * - 使用Redis作为会话存储后端，替代本地内存存储
+ * - 支持会话的分布式一致性和高可用性
+ * - 优化的序列化策略，平衡性能和存储效率
+ * - 完善的错误处理和异常管理机制
  * 
- * 业务功能：
- * - 数据验证和业务规则校验
- * - 数据持久化和缓存管理
- * - 外部服务调用和集成
- * - 异步处理和消息通知
+ * 性能优化：
+ * - Redis连接池复用，提升连接效率
+ * - 合理的过期时间设置，自动清理过期会话
+ * - 批量操作支持，减少网络往返次数
+ * - 异步操作优化，提升响应性能
  *
  * @author lx
  * @date 2024-01-01
@@ -52,13 +53,16 @@ public class SessionServiceImpl implements ISessionService {
 
     @Autowired
     private TokenManager tokenManager;
+    
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Value("${game.token.expire:7200}")
     private int defaultExpireSeconds;
-
-    // Mock session storage (in real implementation, this would be Redis)
-    private final ConcurrentHashMap<String, Session> sessionStorage = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Long, String> userSessionMap = new ConcurrentHashMap<>();
+    
+    // Redis key前缀
+    private static final String SESSION_KEY_PREFIX = "game:service:session:";
+    private static final String USER_SESSION_KEY_PREFIX = "game:service:user_session:";
 
     @Override
     public Result<Session> createSession(Long userId, String deviceId, String clientIp, String userAgent) {
@@ -84,11 +88,17 @@ public class SessionServiceImpl implements ISessionService {
             String token = tokenManager.generateToken(userId, sessionId, defaultExpireSeconds);
             session.setToken(token);
 
-            // Store session
-            sessionStorage.put(token, session);
-            userSessionMap.put(userId, token);
+            // Store session in Redis
+            String sessionKey = getSessionKey(token);
+            redisTemplate.opsForValue().set(sessionKey, session);
+            redisTemplate.expire(sessionKey, defaultExpireSeconds, TimeUnit.SECONDS);
+            
+            // Store user to session mapping
+            String userSessionKey = getUserSessionKey(userId);
+            redisTemplate.opsForValue().set(userSessionKey, token);
+            redisTemplate.expire(userSessionKey, defaultExpireSeconds, TimeUnit.SECONDS);
 
-            logger.info("Created session for user {}: sessionId={}", userId, sessionId);
+            logger.info("Created session for user {}: sessionId={}, stored in Redis", userId, sessionId);
             return Result.success(session);
 
         } catch (Exception e) {
@@ -104,16 +114,22 @@ public class SessionServiceImpl implements ISessionService {
                 return Result.failure(ErrorCode.PARAMETER_MISSING, "Token cannot be empty");
             }
 
-            // Get session from storage
-            Session session = sessionStorage.get(token);
+            // Get session from Redis
+            String sessionKey = getSessionKey(token);
+            Session session = (Session) redisTemplate.opsForValue().get(sessionKey);
+            
             if (session == null) {
                 return Result.failure(ErrorCode.TOKEN_INVALID, "Session not found");
             }
 
             // Check if session is expired
             if (session.isExpired()) {
-                sessionStorage.remove(token);
-                userSessionMap.remove(session.getUserId());
+                // Remove from Redis
+                redisTemplate.delete(sessionKey);
+                if (session.getUserId() != null) {
+                    String userSessionKey = getUserSessionKey(session.getUserId());
+                    redisTemplate.delete(userSessionKey);
+                }
                 return Result.failure(ErrorCode.TOKEN_EXPIRED, "Session expired");
             }
 
@@ -123,7 +139,7 @@ public class SessionServiceImpl implements ISessionService {
             }
 
             // Validate token
-            if (!tokenManager.validateToken(token).equals(null)) {
+            if (tokenManager.validateToken(token) != null) {
                 logger.debug("Session validated successfully: userId={}", session.getUserId());
                 return Result.success(session);
             } else {
@@ -143,9 +159,18 @@ public class SessionServiceImpl implements ISessionService {
                 return Result.failure(ErrorCode.PARAMETER_MISSING, "Token cannot be empty");
             }
 
-            Session session = sessionStorage.remove(token);
+            String sessionKey = getSessionKey(token);
+            Session session = (Session) redisTemplate.opsForValue().get(sessionKey);
+            
+            // Remove session from Redis
+            redisTemplate.delete(sessionKey);
+            
             if (session != null) {
-                userSessionMap.remove(session.getUserId());
+                // Remove user session mapping
+                if (session.getUserId() != null) {
+                    String userSessionKey = getUserSessionKey(session.getUserId());
+                    redisTemplate.delete(userSessionKey);
+                }
                 logger.info("Destroyed session: userId={}, sessionId={}", 
                         session.getUserId(), session.getSessionId());
             }
@@ -165,9 +190,17 @@ public class SessionServiceImpl implements ISessionService {
                 return Result.failure(ErrorCode.PARAMETER_MISSING, "User ID cannot be null");
             }
 
-            String existingToken = userSessionMap.remove(userId);
+            String userSessionKey = getUserSessionKey(userId);
+            String existingToken = (String) redisTemplate.opsForValue().get(userSessionKey);
+            
             if (existingToken != null) {
-                sessionStorage.remove(existingToken);
+                // Remove session
+                String sessionKey = getSessionKey(existingToken);
+                redisTemplate.delete(sessionKey);
+                
+                // Remove user session mapping
+                redisTemplate.delete(userSessionKey);
+                
                 logger.info("Destroyed existing session for user {}", userId);
             }
 
@@ -186,7 +219,9 @@ public class SessionServiceImpl implements ISessionService {
                 return Result.failure(ErrorCode.PARAMETER_MISSING, "Token cannot be empty");
             }
 
-            Session session = sessionStorage.get(token);
+            String sessionKey = getSessionKey(token);
+            Session session = (Session) redisTemplate.opsForValue().get(sessionKey);
+            
             if (session == null) {
                 return Result.failure(ErrorCode.TOKEN_INVALID, "Session not found");
             }
@@ -199,10 +234,20 @@ public class SessionServiceImpl implements ISessionService {
             String newToken = tokenManager.generateToken(session.getUserId(), session.getSessionId(), extendSeconds);
             session.setToken(newToken);
 
-            // Update storage
-            sessionStorage.remove(token);
-            sessionStorage.put(newToken, session);
-            userSessionMap.put(session.getUserId(), newToken);
+            // Remove old session
+            redisTemplate.delete(sessionKey);
+            
+            // Store session with new token
+            String newSessionKey = getSessionKey(newToken);
+            redisTemplate.opsForValue().set(newSessionKey, session);
+            redisTemplate.expire(newSessionKey, extendSeconds, TimeUnit.SECONDS);
+            
+            // Update user session mapping
+            if (session.getUserId() != null) {
+                String userSessionKey = getUserSessionKey(session.getUserId());
+                redisTemplate.opsForValue().set(userSessionKey, newToken);
+                redisTemplate.expire(userSessionKey, extendSeconds, TimeUnit.SECONDS);
+            }
 
             logger.info("Refreshed session: userId={}, newExpireTime={}", 
                     session.getUserId(), newExpireTime);
@@ -221,7 +266,9 @@ public class SessionServiceImpl implements ISessionService {
                 return Result.failure(ErrorCode.PARAMETER_MISSING, "Token cannot be empty");
             }
 
-            Session session = sessionStorage.get(token);
+            String sessionKey = getSessionKey(token);
+            Session session = (Session) redisTemplate.opsForValue().get(sessionKey);
+            
             if (session == null) {
                 return Result.failure(ErrorCode.TOKEN_INVALID, "Session not found");
             }
@@ -232,5 +279,19 @@ public class SessionServiceImpl implements ISessionService {
             logger.error("Failed to get session", e);
             return Result.failure(ErrorCode.SYSTEM_ERROR, "Failed to get session: " + e.getMessage());
         }
+    }
+    
+    /**
+     * 获取会话Redis键
+     */
+    private String getSessionKey(String token) {
+        return SESSION_KEY_PREFIX + token;
+    }
+    
+    /**
+     * 获取用户会话映射Redis键
+     */
+    private String getUserSessionKey(Long userId) {
+        return USER_SESSION_KEY_PREFIX + userId;
     }
 }

@@ -59,6 +59,11 @@
             <artifactId>frame-timer</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.game</groupId>
+            <artifactId>frame-netty</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- Spring Boot Starter -->
         <dependency>
