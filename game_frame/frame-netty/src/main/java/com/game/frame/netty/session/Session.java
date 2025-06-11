@@ -165,6 +165,15 @@ public class Session {
     }
     
     /**
+     * Gets all custom attributes
+     * 
+     * @return attributes map
+     */
+    public ConcurrentHashMap<String, Object> getAttributes() {
+        return attributes;
+    }
+    
+    /**
      * Checks if the channel is active and writable
      * 
      * @return true if channel is active and writable
