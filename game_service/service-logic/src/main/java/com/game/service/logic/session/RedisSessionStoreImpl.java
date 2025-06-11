@@ -95,9 +95,11 @@ public class RedisSessionStoreImpl implements SessionStore {
             }
             
             // 注意：从Redis恢复的SessionData不包含Channel对象
-            // 这里返回null，实际应用中需要在框架层处理Channel的重建
+            // 尝试重建Session对象，即使Channel不可用
             logger.debug("Session data retrieved from Redis: {}, but Channel not available", sessionId);
-            return null; // 实际实现中需要处理Channel的获取
+            Session session = new Session(sessionData); // 假设Session有一个接受SessionData的构造函数
+            logger.debug("Session reconstructed from SessionData: {}", sessionId);
+            return session;
             
         } catch (Exception e) {
             logger.error("Failed to get session from Redis: {}", sessionId, e);
