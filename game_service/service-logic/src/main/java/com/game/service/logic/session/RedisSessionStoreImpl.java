@@ -247,10 +247,13 @@ public class RedisSessionStoreImpl implements SessionStore {
             // 获取所有会话ID
             Set<String> sessionIds = getAllSessionIds();
             
-            // 批量删除
-            for (String sessionId : sessionIds) {
-                removeSession(sessionId);
-            }
+            // 使用Redis管道批量删除会话
+            redisTemplate.executePipelined((redisConnection) -> {
+                for (String sessionId : sessionIds) {
+                    redisConnection.del(redisTemplate.getKeySerializer().serialize(sessionId));
+                }
+                return null;
+            });
             
             // 清空索引
             redisTemplate.delete(SESSION_INDEX_KEY);
